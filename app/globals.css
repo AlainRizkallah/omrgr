@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --text-primary: #18181b;
+  --text-secondary: #71717a;
+  --border: #f4f4f5;
+}
+
+.font-editorial {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #a1a1aa;
+  outline-offset: 2px;
+}
+
+/* Mosaic layout: masonry via CSS columns, 1px gap, responsive column count */
+.mosaic-grid {
+  width: 100%;
+  column-gap: 1px;
+  column-fill: balance;
+  column-count: 1;
+}
+@media (min-width: 640px) {
+  .mosaic-grid {
+    column-count: 2;
+  }
+}
+@media (min-width: 768px) {
+  .mosaic-grid {
+    column-count: 3;
+  }
+}
+@media (min-width: 1024px) {
+  .mosaic-grid {
+    column-count: 4;
+  }
+}
+@media (min-width: 1280px) {
+  .mosaic-grid {
+    column-count: 5;
+  }
+}
+
+.mosaic-item {
+  break-inside: avoid;
+  margin-bottom: 1px;
+  page-break-inside: avoid;
+}
