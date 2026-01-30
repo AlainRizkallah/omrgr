@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={cormorant.variable}>
       <body className={`${geist.className} font-sans flex flex-col min-h-screen overflow-x-hidden`}>
         <Header />
-        <main className="flex-1 w-full min-w-0 overflow-x-hidden">{children}</main>
+        <main className="flex-1 w-full min-w-0 overflow-x-hidden max-w-none">{children}</main>
         <Footer />
       </body>
     </html>

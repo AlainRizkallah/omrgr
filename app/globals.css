@@ -16,6 +16,8 @@
 
 html,
 body {
+  margin: 0;
+  padding: 0;
   height: 100%;
 }
 
@@ -38,31 +40,34 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* Mosaic layout: masonry via CSS columns, 1px gap, responsive column count */
+/* Mosaic layout: masonry via CSS columns, 1px gap, dense column count, full bleed */
 .mosaic-grid {
   width: 100%;
+  max-width: none;
+  min-width: 100%;
   column-gap: 1px;
   column-fill: balance;
-  column-count: 1;
+  column-count: 2;
+  background: #18181b;
 }
 @media (min-width: 640px) {
-  .mosaic-grid {
-    column-count: 2;
-  }
-}
-@media (min-width: 768px) {
   .mosaic-grid {
     column-count: 3;
   }
 }
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .mosaic-grid {
     column-count: 4;
   }
 }
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .mosaic-grid {
     column-count: 5;
+  }
+}
+@media (min-width: 1280px) {
+  .mosaic-grid {
+    column-count: 6;
   }
 }
 
@@ -70,4 +75,20 @@ button:focus-visible {
   break-inside: avoid;
   margin-bottom: 1px;
   page-break-inside: avoid;
+}
+
+.mosaic-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Full-bleed category view: break out to viewport edges, no white space */
+.category-full-bleed {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: 100vw;
+  min-height: 100vh;
+  background: #18181b;
+  box-sizing: border-box;
 }

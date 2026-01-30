@@ -13,8 +13,8 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm supports-[backdrop-filter]:bg-white/90 border-b border-zinc-100">
-      <div className="mx-auto flex w-full max-w-none items-center justify-between px-3 py-1.5 sm:px-4">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm supports-[backdrop-filter]:bg-white/90 border-b border-zinc-200/50">
+      <div className="mx-auto flex w-full max-w-none items-center justify-between px-2 py-1 sm:px-3">
         <Link
           href="/"
           className="font-editorial min-h-[44px] min-w-[44px] flex items-center text-[13px] tracking-wide text-zinc-900 hover:text-zinc-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400"
@@ -69,8 +69,8 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <nav className="sm:hidden border-t border-zinc-100 bg-white">
-          <div className="mx-auto w-full flex flex-col px-3 py-2">
+        <nav className="sm:hidden border-t border-zinc-200/50 bg-white">
+          <div className="mx-auto w-full flex flex-col px-2 py-1">
             {nav.map((item) => (
               <Link
                 key={item.href}
