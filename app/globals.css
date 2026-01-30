@@ -1,94 +1,35 @@
+/* Masonry grid and lightbox styles */
+@import "react-photo-album/styles.css";
+@import "yet-another-react-lightbox/styles.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
-  --bg: #ffffff;
-  --text-primary: #18181b;
-  --text-secondary: #71717a;
-  --border: #f4f4f5;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --border: 0 0% 90%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
 }
 
-.font-editorial {
-  font-family: var(--font-serif), Georgia, serif;
+.dark {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --border: 0 0% 15%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 65%;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-body {
-  background: var(--bg);
-  color: var(--text-primary);
-  font-size: 1rem;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-a:focus-visible,
-button:focus-visible {
-  outline: 2px solid #a1a1aa;
-  outline-offset: 2px;
-}
-
-/* Mosaic layout: masonry via CSS columns, 1px gap, dense column count, full bleed */
-.mosaic-grid {
-  width: 100%;
-  max-width: none;
-  min-width: 100%;
-  column-gap: 1px;
-  column-fill: balance;
-  column-count: 2;
-  background: #18181b;
-}
-@media (min-width: 640px) {
-  .mosaic-grid {
-    column-count: 3;
-  }
-}
-@media (min-width: 768px) {
-  .mosaic-grid {
-    column-count: 4;
-  }
-}
-@media (min-width: 1024px) {
-  .mosaic-grid {
-    column-count: 5;
-  }
-}
-@media (min-width: 1280px) {
-  .mosaic-grid {
-    column-count: 6;
+@layer base {
+  html,
+  body {
+    @apply h-full w-full m-0 p-0 antialiased bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
   }
 }
 
-.mosaic-item {
-  break-inside: avoid;
-  margin-bottom: 1px;
-  page-break-inside: avoid;
-}
-
-.mosaic-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Full-bleed category view: break out to viewport edges, no white space */
-.category-full-bleed {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  max-width: 100vw;
-  min-height: 100vh;
-  background: #18181b;
-  box-sizing: border-box;
+.react-photo-album--photo {
+  border-radius: 20px !important;
+  object-fit: cover !important;
 }

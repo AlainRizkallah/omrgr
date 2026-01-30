@@ -1,34 +1,23 @@
-import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
-import { Cormorant_Garamond } from "next/font/google";
+/**
+ * Root layout: global styles, thin header, and main content area (flex so collection pages can fill height).
+ */
+import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-
-const geist = Geist({ subsets: ["latin"] });
-const cormorant = Cormorant_Garamond({
-  weight: ["400", "500", "600"],
-  subsets: ["latin"],
-  variable: "--font-serif",
-});
+import Header from "@/components/header";
 
 export const metadata: Metadata = {
-  title: "Your Name — Work",
-  description: "Minimal photo-first portfolio.",
+  title: "OMRGR",
+  description: "Minimal photo gallery",
 };
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cormorant.variable}>
-      <body className={`${geist.className} font-sans flex flex-col min-h-screen overflow-x-hidden`}>
+    <html lang="en">
+      <body className="flex min-h-screen flex-col bg-background text-foreground antialiased">
         <Header />
-        <main className="flex-1 w-full min-w-0 overflow-x-hidden max-w-none">{children}</main>
-        <Footer />
+        <main className="min-h-0 flex-1 flex flex-col">{children}</main>
       </body>
     </html>
   );
