@@ -17,13 +17,13 @@ export default function CollectionGrid({ collections }: { collections: Collectio
   if (collections.length === 0) return null;
 
   return (
-    <div className="w-full p-0.5 sm:p-1 box-border">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-0.5 sm:grid-cols-2 sm:gap-1">
+    <div className="w-full p-0.5 sm:p-1 box-border flex flex-col sm:flex-1 sm:min-h-0">
+      <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-2 sm:grid-rows-[1fr_1fr] sm:gap-1 sm:flex-1 sm:min-h-0 w-full">
         {collections.map((col, i) => (
           <Link
             key={col.slug}
             href={`/collections/${col.slug}`}
-            className={`relative block aspect-[4/3] overflow-hidden rounded-md group ${i === 2 ? "sm:col-span-2 sm:aspect-[3/1]" : ""}`}
+            className={`relative block overflow-hidden rounded-md group aspect-[4/3] sm:aspect-auto sm:h-full min-h-0 ${i === 2 ? "sm:col-span-2" : ""}`}
           >
             <RotatingCover photos={col.photos} alt={col.title} phaseOffset={i * 1200} />
             <div
