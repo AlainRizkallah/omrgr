@@ -151,19 +151,25 @@ export async function getContact(): Promise<ContactData | null> {
 
 export async function getHome(): Promise<HomeData> {
   if (!isSanityConfigured()) {
-    return { heroImageUrl: null, intro: null, siteTitle: "Showcase" };
+    return { heroImageUrl: null, heroImageMargin: "medium", intro: null, siteTitle: "OMRGR" };
   }
   const [home, settings] = await Promise.all([
-    client.fetch<{ heroImageRef?: string; intro?: unknown } | null>(homeQuery),
+    client.fetch<{ heroImageRef?: string; heroImageMargin?: string; intro?: unknown } | null>(homeQuery),
     client.fetch<{ title?: string } | null>(siteSettingsQuery),
   ]);
-  const siteTitle = settings?.title || "Showcase";
+  const raw = settings?.title?.trim();
+  const siteTitle = raw && raw !== "Showcase" ? raw : "OMRGR";
   let heroImageUrl: string | null = null;
   if (home?.heroImageRef) {
     heroImageUrl = urlFor({ _ref: home.heroImageRef }).width(1920).height(1080).url();
   }
+  const marginRaw = home?.heroImageMargin?.toString().trim().toLowerCase();
+  const heroImageMargin = (marginRaw === "none" || marginRaw === "small" || marginRaw === "large"
+    ? marginRaw
+    : "medium") as HomeData["heroImageMargin"];
   return {
     heroImageUrl,
+    heroImageMargin,
     intro: home?.intro ?? null,
     siteTitle,
   };

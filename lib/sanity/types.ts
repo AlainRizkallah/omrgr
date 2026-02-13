@@ -46,8 +46,11 @@ export interface ContactData {
   body: unknown;
 }
 
+export type HeroImageMargin = "none" | "small" | "medium" | "large";
+
 export interface HomeData {
   heroImageUrl: string | null;
+  heroImageMargin: HeroImageMargin;
   intro: unknown;
   siteTitle: string;
 }

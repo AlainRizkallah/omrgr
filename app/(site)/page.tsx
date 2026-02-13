@@ -9,6 +9,7 @@ export default async function HomePage() {
     <div className="flex min-h-full flex-1 flex-col w-full">
       <HomeHero
         heroImageUrl={home.heroImageUrl}
+        heroImageMargin={home.heroImageMargin}
         intro={home.intro}
         siteTitle={home.siteTitle}
       />

@@ -60,6 +60,7 @@ export const contactQuery = `*[_type == "contact"][0] {
 /** GROQ: home document */
 export const homeQuery = `*[_type == "home"][0] {
   "heroImageRef": heroImage.asset._ref,
+  heroImageMargin,
   intro
 }`;
 
