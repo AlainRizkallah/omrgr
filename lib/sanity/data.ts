@@ -9,14 +9,27 @@ import {
   homeQuery,
   siteSettingsQuery,
 } from "./queries";
-import type { SeriesLink, GalleryData, InfoPageData, ContactData, HomeData, PhotoItem } from "./types";
+import type { SeriesLink, GalleryData, InfoPageData, ContactData, HomeData, PhotoItem, GalleryLayoutBlock } from "./types";
 
 interface GalleryFetchResult {
   title: string
   slug: string
   seriesSlug: string
   seriesTitle: string
-  photos: Array<{ asset: { _ref?: string; _id?: string } | null; alt?: string; caption?: string }>
+  layoutBlocks?: Array<{
+    _type: string
+    _key?: string
+    body?: unknown
+    imageRef?: string
+    imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
+    caption?: string
+  }>
+  photos: Array<{
+    asset: { _ref?: string; _id?: string } | null
+    dimensions?: { width: number; height: number } | null
+    alt?: string
+    caption?: string
+  }>
 }
 
 const DEFAULT_W = 1200;
@@ -26,14 +39,20 @@ const isSanityConfigured = () =>
   typeof process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "string" &&
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "placeholder";
 
-function photoFromSanity(asset: { _ref?: string; _id?: string } | null, alt: string, title: string): PhotoItem {
-  // GROQ with asset-> returns expanded doc with _id; reference has _ref. urlFor accepts both.
+function photoFromSanity(
+  asset: { _ref?: string; _id?: string } | null,
+  dimensions: { width: number; height: number } | null | undefined,
+  alt: string,
+  title: string
+): PhotoItem {
   const source = asset?._ref ? { _ref: asset._ref } : asset?._id ? { _ref: asset._id } : null;
   if (!source) {
     return { src: "", width: DEFAULT_W, height: DEFAULT_H, alt, title };
   }
-  const src = urlFor(source).width(DEFAULT_W).height(DEFAULT_H).url();
-  return { src, width: DEFAULT_W, height: DEFAULT_H, alt: alt || title, title: title || alt };
+  const w = dimensions?.width ?? DEFAULT_W;
+  const h = dimensions?.height ?? DEFAULT_H;
+  const src = urlFor(source).width(w).height(h).url();
+  return { src, width: w, height: h, alt: alt || title, title: title || alt };
 }
 
 export async function getSeriesList(): Promise<SeriesLink[]> {
@@ -61,8 +80,34 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
   const g = await client.fetch<GalleryFetchResult | null>(galleryBySlugsQuery, { seriesSlug, gallerySlug });
   if (!g) return null;
   const photos: PhotoItem[] = (g.photos || [])
-    .map((p) => photoFromSanity(p.asset, p.alt || "", p.caption || p.alt || g.title))
+    .map((p) => photoFromSanity(p.asset, p.dimensions, p.alt || "", p.caption || p.alt || g.title))
     .filter((p) => p.src !== "");
+
+  const layoutBlocks: GalleryLayoutBlock[] = (g.layoutBlocks || [])
+    .filter((b): b is NonNullable<typeof b> => b != null && b._type != null)
+    .map((b) => {
+      if (b._type === "galleryLayoutBlockText") {
+        return { type: "galleryLayoutBlockText", body: b.body ?? [] };
+      }
+      if (b._type === "galleryLayoutBlockImage" && (b.imageRef || b.imageAsset?._id)) {
+        const refId = b.imageRef ?? b.imageAsset?._id ?? "";
+        const dims = b.imageAsset?.metadata?.dimensions;
+        const w = dims?.width ?? DEFAULT_W;
+        const h = dims?.height ?? DEFAULT_H;
+        const src = refId ? urlFor({ _ref: refId }).width(w).height(h).url() : "";
+        return {
+          type: "galleryLayoutBlockImage",
+          src,
+          alt: b.caption ?? "",
+          caption: b.caption,
+          width: w,
+          height: h,
+        };
+      }
+      return null;
+    })
+    .filter((b): b is GalleryLayoutBlock => b != null);
+
   const seriesList = await getSeriesList();
   const otherGalleries: GalleryData["otherGalleries"] = [];
   for (const series of seriesList) {
@@ -77,6 +122,7 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
     seriesSlug: g.seriesSlug,
     seriesTitle: g.seriesTitle,
     slug: g.slug,
+    layoutBlocks: layoutBlocks.length > 0 ? layoutBlocks : undefined,
     photos,
     otherGalleries,
   };

@@ -90,10 +90,11 @@ npm start
 Use **Sanity Studio** (hosted at `https://YOUR_PROJECT_ID.sanity.studio`) to:
 
 - Create and edit **Series** and **Galleries**, upload and **drag-and-drop reorder** images.
+- Add **custom layout** (text and images) at the top of each gallery page; the **All Media** grid appears below.
 - Edit **Info** (About, CV, Press) and **Contact**.
-- Edit **Home** (hero image and intro) and **Site Settings**.
+- Edit **Home** (hero image and intro) and **Site Settings** (header title, e.g. OMRGR).
 
-See **[docs/SANITY-WALKTHROUGH.md](docs/SANITY-WALKTHROUGH.md)** for a short step-by-step walkthrough.
+**Editors:** See **[docs/SANITY-WALKTHROUGH.md](docs/SANITY-WALKTHROUGH.md)** for a step-by-step guide written for non-technical users (custom layout, All Media, and where everything appears on the site).
 
 ---
 

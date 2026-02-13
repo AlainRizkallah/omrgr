@@ -29,6 +29,7 @@ export default async function WorksGalleryPage({ params }: PageProps) {
       <WorksGallery
         title={gallery.title}
         seriesTitle={gallery.seriesTitle}
+        layoutBlocks={gallery.layoutBlocks}
         photos={gallery.photos}
         otherGalleries={gallery.otherGalleries}
       />

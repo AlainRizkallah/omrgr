@@ -12,15 +12,28 @@ export const seriesListQuery = `*[_type == "series"] | order(order asc) {
   }
 }`;
 
-/** GROQ: single gallery by series slug + gallery slug with images */
+/** GROQ: single gallery by series slug + gallery slug with images and layout blocks */
 export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gallerySlug && series->slug.current == $seriesSlug][0] {
   _id,
   title,
   "slug": slug.current,
   "seriesSlug": series->slug.current,
   "seriesTitle": series->title,
+  "layoutBlocks": layoutBlocks[]{
+    _type,
+    _key,
+    _type == "galleryLayoutBlockText" => {
+      "body": body
+    },
+    _type == "galleryLayoutBlockImage" => {
+      "imageRef": image.asset._ref,
+      "imageAsset": image.asset->,
+      "caption": caption
+    }
+  },
   "photos": images[]{
     "asset": asset->,
+    "dimensions": asset->.metadata.dimensions,
     alt,
     caption
   }

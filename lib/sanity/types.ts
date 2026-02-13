@@ -21,11 +21,17 @@ export interface SeriesLink {
   galleries: GalleryLink[];
 }
 
+/** Layout block for gallery page (custom content above All Media grid) */
+export type GalleryLayoutBlock =
+  | { type: "galleryLayoutBlockText"; body: unknown }
+  | { type: "galleryLayoutBlockImage"; src: string; alt: string; caption?: string; width?: number; height?: number };
+
 export interface GalleryData {
   title: string;
   seriesSlug: string;
   seriesTitle: string;
   slug: string;
+  layoutBlocks?: GalleryLayoutBlock[];
   photos: PhotoItem[];
   otherGalleries: GalleryLink[];
 }

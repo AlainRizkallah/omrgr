@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 98%;
-  --foreground: 0 0% 9%;
-  --border: 0 0% 90%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 45%;
+  /* Slightly warm off-white / beige, still reads as white */
+  --background: 35 20% 97%;
+  --foreground: 30 10% 12%;
+  --border: 35 15% 88%;
+  --muted: 35 18% 94%;
+  --muted-foreground: 30 8% 42%;
 }
 
 @layer base {
