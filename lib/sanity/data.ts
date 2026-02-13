@@ -16,7 +16,7 @@ interface GalleryFetchResult {
   slug: string
   seriesSlug: string
   seriesTitle: string
-  photos: Array<{ asset: { _ref?: string } | null; alt?: string; caption?: string }>
+  photos: Array<{ asset: { _ref?: string; _id?: string } | null; alt?: string; caption?: string }>
 }
 
 const DEFAULT_W = 1200;
@@ -26,11 +26,13 @@ const isSanityConfigured = () =>
   typeof process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "string" &&
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "placeholder";
 
-function photoFromSanity(asset: { _ref?: string } | null, alt: string, title: string): PhotoItem {
-  if (!asset?._ref) {
+function photoFromSanity(asset: { _ref?: string; _id?: string } | null, alt: string, title: string): PhotoItem {
+  // GROQ with asset-> returns expanded doc with _id; reference has _ref. urlFor accepts both.
+  const source = asset?._ref ? { _ref: asset._ref } : asset?._id ? { _ref: asset._id } : null;
+  if (!source) {
     return { src: "", width: DEFAULT_W, height: DEFAULT_H, alt, title };
   }
-  const src = urlFor(asset).width(DEFAULT_W).height(DEFAULT_H).url();
+  const src = urlFor(source).width(DEFAULT_W).height(DEFAULT_H).url();
   return { src, width: DEFAULT_W, height: DEFAULT_H, alt: alt || title, title: title || alt };
 }
 
@@ -58,9 +60,9 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
   if (!isSanityConfigured()) return null;
   const g = await client.fetch<GalleryFetchResult | null>(galleryBySlugsQuery, { seriesSlug, gallerySlug });
   if (!g) return null;
-  const photos: PhotoItem[] = (g.photos || []).map((p) =>
-    photoFromSanity(p.asset, p.alt || "", p.caption || p.alt || g.title)
-  );
+  const photos: PhotoItem[] = (g.photos || [])
+    .map((p) => photoFromSanity(p.asset, p.alt || "", p.caption || p.alt || g.title))
+    .filter((p) => p.src !== "");
   const seriesList = await getSeriesList();
   const otherGalleries: GalleryData["otherGalleries"] = [];
   for (const series of seriesList) {

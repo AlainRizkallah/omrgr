@@ -6,6 +6,8 @@
 const fs = require("fs");
 const path = require("path");
 
+require("dotenv").config({ path: path.resolve(__dirname, "..", ".env.local") });
+
 const PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 const TOKEN = process.env.SANITY_API_TOKEN;

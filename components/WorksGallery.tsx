@@ -53,8 +53,9 @@ export default function WorksGallery({ title, seriesTitle, photos, otherGallerie
             breakpoints={[3840, 1920, 1280, 960, 640, 384]}
             onClick={({ index }) => setLightboxIndex(index)}
             render={{
-              photo: ({ imageProps: { src, alt, ...rest }, wrapperStyle }, { photo }) => {
-                const p = photo as PhotoItem;
+              photo: ({ wrapperStyle }, { photo }) => {
+                const p = photo as PhotoItem | undefined;
+                if (!p?.src) return <div style={wrapperStyle} />;
                 return (
                   <div
                     className="overflow-hidden rounded-lg"

@@ -36,12 +36,27 @@ Optional:
 - `SANITY_API_TOKEN` — Editor token (for the bootstrap script and optional server-side write).
 - `REVALIDATION_SECRET` — Secret for the on-demand revalidate API (e.g. for a Sanity webhook).
 
-### 3. Bootstrap content (optional)
+### 3. Deploy Sanity Studio (one-time)
+
+So your schema (Series, Gallery, Info, etc.) is available in Sanity and you can edit content:
+
+1. Ensure `.env.local` in the **repo root** has `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET`.
+2. Install Studio dependencies and deploy:
+
+```bash
+cd sanity
+npm install
+npx sanity deploy
+```
+
+When prompted, choose **Create new studio hostname** and enter a name (e.g. `omrgr` → `https://omrgr.sanity.studio`). After deploy, open that URL to manage content.
+
+### 4. Bootstrap content (optional)
 
 To seed Sanity from the **Pictures** folder (Chairs, Paintings, Interior Design) and add placeholder text for Info, Contact, and Home:
 
 1. Set `SANITY_API_TOKEN` in `.env.local` (token with Editor access).
-2. Run:
+2. From the repo root, run:
 
 ```bash
 node scripts/bootstrap-sanity.js
@@ -49,7 +64,7 @@ node scripts/bootstrap-sanity.js
 
 This creates Series, Galleries, uploads images from `Pictures/`, and creates Info, Contact, and Home documents with placeholder text.
 
-### 4. Install and run
+### 5. Install and run
 
 ```bash
 npm install
@@ -58,7 +73,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-### 5. Build
+### 6. Build
 
 ```bash
 npm run build

@@ -2,14 +2,15 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { schemaTypes } from "./schema";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!;
+// Use SANITY_STUDIO_* so the bundler statically replaces them (no process in browser). Set in CLI from .env.local.
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "placeholder";
+const dataset = process.env.SANITY_STUDIO_DATASET || "production";
 
 export default defineConfig({
   name: "default",
   title: "Showcase CMS",
-  projectId: projectId || "placeholder",
-  dataset: dataset || "production",
+  projectId,
+  dataset,
   plugins: [structureTool()],
   schema: {
     types: schemaTypes,
