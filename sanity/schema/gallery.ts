@@ -184,6 +184,119 @@ export const galleryLayoutBlockRowType = defineType({
   },
 });
 
+/** Text cell inside a Grid layout block */
+export const galleryGridCellTextType = defineType({
+  name: "galleryGridCellText",
+  title: "Text",
+  type: "object",
+  fields: [
+    defineField({
+      name: "font",
+      type: "string",
+      title: "Font",
+      options: {
+        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "serif",
+    }),
+    defineField({
+      name: "textSize",
+      type: "string",
+      title: "Text size",
+      options: {
+        list: [...LAYOUT_BLOCK_TEXT_SIZE_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "base",
+    }),
+    defineField({
+      name: "body",
+      type: "array",
+      of: [{ type: "block" }],
+      title: "Content",
+    }),
+  ],
+  preview: {
+    prepare() {
+      return { title: "Text", subtitle: "Text cell" };
+    },
+  },
+});
+
+/** Image cell inside a Grid layout block */
+export const galleryGridCellImageType = defineType({
+  name: "galleryGridCellImage",
+  title: "Image",
+  type: "object",
+  fields: [
+    defineField({
+      name: "image",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "caption",
+      type: "string",
+    }),
+  ],
+  preview: {
+    select: { caption: "caption" },
+    prepare({ caption }) {
+      return { title: "Image", subtitle: caption ? caption : "Image cell" };
+    },
+  },
+});
+
+const GRID_COLUMNS_OPTIONS = [
+  { value: "2", title: "2" },
+  { value: "3", title: "3" },
+  { value: "4", title: "4" },
+] as const;
+
+/** Grid layout block: multiple columns and rows of text/image cells */
+export const galleryLayoutBlockGridType = defineType({
+  name: "galleryLayoutBlockGrid",
+  title: "Grid",
+  type: "object",
+  fields: [
+    defineField({
+      name: "columns",
+      type: "string",
+      title: "Columns (desktop)",
+      description: "Number of columns on large screens. On smaller screens the grid uses fewer columns (responsive).",
+      options: {
+        list: [...GRID_COLUMNS_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "2",
+    }),
+    defineField({
+      name: "items",
+      type: "array",
+      title: "Cells",
+      description: "Add text or image cells. Order is left-to-right, top-to-bottom.",
+      of: [
+        { type: "galleryGridCellText" },
+        { type: "galleryGridCellImage" },
+      ],
+    }),
+  ],
+  preview: {
+    select: { columns: "columns", items: "items" },
+    prepare({ columns, items }) {
+      const count = Array.isArray(items) ? items.length : 0;
+      return {
+        title: "Grid",
+        subtitle: `${columns ?? 2} columns, ${count} item${count !== 1 ? "s" : ""}`,
+      };
+    },
+  },
+});
+
 export const galleryImageType = defineType({
   name: "galleryImage",
   title: "Gallery Image",
@@ -243,6 +356,7 @@ export const galleryType = defineType({
         { type: "galleryLayoutBlockText" },
         { type: "galleryLayoutBlockImage" },
         { type: "galleryLayoutBlockRow" },
+        { type: "galleryLayoutBlockGrid" },
       ],
     }),
     defineField({

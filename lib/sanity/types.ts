@@ -21,6 +21,11 @@ export interface SeriesLink {
   galleries: GalleryLink[];
 }
 
+/** Cell inside a Grid layout block */
+export type GalleryGridCell =
+  | { type: "galleryGridCellText"; body: unknown; font?: string; textSize?: string }
+  | { type: "galleryGridCellImage"; src: string; alt: string; caption?: string; width?: number; height?: number };
+
 /** Layout block for gallery page (custom content above All Media grid) */
 export type GalleryLayoutBlock =
   | { type: "galleryLayoutBlockText"; body: unknown; font?: string; textSize?: string }
@@ -37,7 +42,8 @@ export type GalleryLayoutBlock =
       caption?: string;
       width?: number;
       height?: number;
-    };
+    }
+  | { type: "galleryLayoutBlockGrid"; columns: number; items: GalleryGridCell[] };
 
 export interface GalleryData {
   title: string;

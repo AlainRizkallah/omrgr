@@ -9,7 +9,7 @@ import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "react-photo-album/styles.css";
 import "yet-another-react-lightbox/styles.css";
-import type { PhotoItem, GalleryLayoutBlock } from "@/lib/sanity/types";
+import type { PhotoItem, GalleryLayoutBlock, GalleryGridCell } from "@/lib/sanity/types";
 
 /** Tailwind classes for layout block font (matches Sanity options) */
 function layoutBlockFontClass(font?: string): string {
@@ -189,6 +189,64 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
                           {imageCell}
                         </>
                       )}
+                    </div>
+                  </div>
+                );
+              }
+              if (block.type === "galleryLayoutBlockGrid") {
+                const lgColsClass =
+                  block.columns === 3 ? "lg:grid-cols-3" : block.columns === 4 ? "lg:grid-cols-4" : "lg:grid-cols-2";
+                return (
+                  <div key={i} className="mx-auto w-full max-w-6xl">
+                    <div
+                      className={`grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 items-start ${lgColsClass}`}
+                    >
+                      {block.items.map((cell: GalleryGridCell, j: number) => {
+                        if (cell.type === "galleryGridCellText") {
+                          const fontClass = layoutBlockFontClass(cell.font);
+                          const sizeKey = layoutBlockTextSizeClass(cell.textSize);
+                          const components = galleryLayoutBlockComponents(sizeKey);
+                          return (
+                            <div key={j} className="min-w-0">
+                              {cell.body && Array.isArray(cell.body) && cell.body.length > 0 ? (
+                                <div
+                                  className={`${fontClass} ${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                                >
+                                  <PortableText
+                                    value={(cell.body ?? []) as React.ComponentProps<typeof PortableText>["value"]}
+                                    components={components}
+                                  />
+                                </div>
+                              ) : (
+                                <p className="text-[hsl(var(--muted-foreground))] text-sm">—</p>
+                              )}
+                            </div>
+                          );
+                        }
+                        if (cell.type === "galleryGridCellImage" && cell.src) {
+                          return (
+                            <div key={j} className="min-w-0">
+                              <figure className="space-y-2">
+                                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[hsl(var(--muted))] sm:aspect-[3/2]">
+                                  <Image
+                                    src={cell.src}
+                                    alt={cell.alt}
+                                    fill
+                                    className="object-contain"
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                  />
+                                </div>
+                                {cell.caption && (
+                                  <figcaption className="text-center text-sm text-[hsl(var(--muted-foreground))]">
+                                    {cell.caption}
+                                  </figcaption>
+                                )}
+                              </figure>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
                     </div>
                   </div>
                 );

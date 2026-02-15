@@ -9,7 +9,7 @@ import {
   homeQuery,
   siteSettingsQuery,
 } from "./queries";
-import type { SeriesLink, GalleryData, InfoPageData, ContactData, HomeData, PhotoItem, GalleryLayoutBlock } from "./types";
+import type { SeriesLink, GalleryData, InfoPageData, ContactData, HomeData, PhotoItem, GalleryLayoutBlock, GalleryGridCell } from "./types";
 
 interface GalleryFetchResult {
   title: string
@@ -25,6 +25,17 @@ interface GalleryFetchResult {
     textSize?: string
     layout?: string
     mobileOrder?: string
+    columns?: string
+    items?: Array<{
+      _type: string
+      _key?: string
+      body?: unknown
+      font?: string
+      textSize?: string
+      imageRef?: string
+      imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
+      caption?: string
+    }>
     imageRef?: string
     imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
     caption?: string
@@ -133,6 +144,44 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
           caption: b.caption,
           width: w,
           height: h,
+        };
+      }
+      if (b._type === "galleryLayoutBlockGrid") {
+        const columns = typeof b.columns === "string" ? parseInt(b.columns, 10) : typeof b.columns === "number" ? b.columns : 2;
+        const validColumns = columns >= 2 && columns <= 4 ? columns : 2;
+        const mappedItems: GalleryGridCell[] = (b.items || [])
+          .filter((it): it is NonNullable<typeof it> => it != null && it._type != null)
+          .map((it) => {
+            if (it._type === "galleryGridCellText") {
+              return {
+                type: "galleryGridCellText" as const,
+                body: it.body ?? [],
+                font: it.font ?? "serif",
+                textSize: it.textSize ?? "base",
+              };
+            }
+            if (it._type === "galleryGridCellImage" && (it.imageRef || it.imageAsset?._id)) {
+              const refId = it.imageRef ?? it.imageAsset?._id ?? "";
+              const dims = it.imageAsset?.metadata?.dimensions;
+              const w = dims?.width ?? DEFAULT_W;
+              const h = dims?.height ?? DEFAULT_H;
+              const src = refId ? urlFor({ _ref: refId }).width(w).height(h).url() : "";
+              return {
+                type: "galleryGridCellImage" as const,
+                src,
+                alt: it.caption ?? "",
+                caption: it.caption,
+                width: w,
+                height: h,
+              };
+            }
+            return null;
+          })
+          .filter((c): c is GalleryGridCell => c != null);
+        return {
+          type: "galleryLayoutBlockGrid",
+          columns: validColumns,
+          items: mappedItems,
         };
       }
       return null;
