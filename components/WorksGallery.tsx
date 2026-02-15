@@ -119,7 +119,7 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
                 return (
                   <div key={i} className="mx-auto max-w-3xl">
                   <figure className="space-y-2">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[hsl(var(--muted))] sm:aspect-[3/2]">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg sm:aspect-[3/2]">
                       <Image
                         src={block.src}
                         alt={block.alt}
@@ -158,7 +158,7 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
                 const imageCell = (
                   <div className={`${imageOrderClass} min-w-0`}>
                     <figure className="space-y-2">
-                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[hsl(var(--muted))] sm:aspect-[3/2]">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg sm:aspect-[3/2]">
                         <Image
                           src={block.src}
                           alt={block.alt}
@@ -227,7 +227,7 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
                           return (
                             <div key={j} className="min-w-0">
                               <figure className="space-y-2">
-                                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[hsl(var(--muted))] sm:aspect-[3/2]">
+                                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg sm:aspect-[3/2]">
                                   <Image
                                     src={cell.src}
                                     alt={cell.alt}
@@ -297,7 +297,7 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
                         alt={p.alt}
                         width={p.width}
                         height={p.height}
-                        className="object-cover transition hover:scale-[1.02]"
+                        className="object-contain transition hover:scale-[1.02]"
                         style={{ width: "100%", height: "100%" }}
                         sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                       />
