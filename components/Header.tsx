@@ -59,10 +59,6 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
               <button
                 type="button"
                 onClick={handleWorksClick}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  handleWorksClick();
-                }}
                 className="min-h-[44px] min-w-[44px] py-2 text-left text-[hsl(var(--foreground))] hover:opacity-80"
                 aria-expanded={worksOpen}
                 aria-haspopup="true"
@@ -76,29 +72,17 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                     aria-hidden
                     onClick={handleWorksBackdropClick}
                   />
-                  <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[220px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl">
+                  <div className="absolute left-0 top-full z-20 mt-1.5 max-h-[70vh] min-w-[220px] overflow-y-auto rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl">
                     {seriesList.length === 0 ? (
                       <div className="px-4 py-3 text-[hsl(var(--muted-foreground))] text-xs">No series yet. Add content in Sanity Studio.</div>
                     ) : (
                       seriesList.map((series) => (
-                        <div
-                          key={series.slug}
-                          className="relative"
-                          onMouseEnter={() => setOpenSeriesSlug(series.slug)}
-                          onMouseLeave={() => setOpenSeriesSlug(null)}
-                        >
+                        <div key={series.slug} className="relative">
                           <button
                             type="button"
                             className="flex min-h-[40px] w-full items-center justify-between gap-2 rounded-md px-4 py-2.5 text-left text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
-                            onClick={() => {
-                              setOpenSeriesSlug((s) => {
-                                const next = s === series.slug ? null : series.slug;
-                                if (next) worksOpenedAtRef.current = Date.now();
-                                return next;
-                              });
-                            }}
-                            onTouchEnd={(e) => {
-                              e.preventDefault();
+                            onClick={(e) => {
+                              e.stopPropagation();
                               worksOpenedAtRef.current = Date.now();
                               setOpenSeriesSlug((s) => (s === series.slug ? null : series.slug));
                             }}
@@ -164,10 +148,6 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
               <button
                 type="button"
                 onClick={handleInfoClick}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  handleInfoClick();
-                }}
                 className="min-h-[44px] min-w-[44px] py-2 text-left text-[hsl(var(--foreground))] hover:opacity-80"
                 aria-expanded={infoOpen}
                 aria-haspopup="true"
