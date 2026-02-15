@@ -7,7 +7,7 @@ This guide explains how to manage your showcase site content using Sanity. No te
 ## 1. Opening Sanity Studio
 
 - **Where to go**: Your Studio is at  
-  `https://YOUR_PROJECT_ID.sanity.studio`  
+  `https://omrgr.sanity.studio`  
   (Use the project link you were given, or ask for it.)
 - **Log in** with the Sanity account that has access to this project.
 

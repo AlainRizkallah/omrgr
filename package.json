@@ -17,7 +17,9 @@
     "next-sanity": "^9.12.3",
     "react": "19.0.1",
     "react-dom": "19.0.1",
+    "react-markdown": "^10.1.0",
     "react-photo-album": "latest",
+    "remark-gfm": "^4.0.1",
     "sanity": "^3.99.0",
     "yet-another-react-lightbox": "^3.23.0"
   },
