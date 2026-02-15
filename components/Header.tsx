@@ -72,7 +72,7 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                     aria-hidden
                     onClick={handleWorksBackdropClick}
                   />
-                  <div className="absolute left-0 top-full z-20 mt-1.5 max-h-[70vh] min-w-[220px] overflow-y-auto rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl">
+                  <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[220px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl max-h-[70vh] overflow-y-auto md:max-h-none md:overflow-visible">
                     {seriesList.length === 0 ? (
                       <div className="px-4 py-3 text-[hsl(var(--muted-foreground))] text-xs">No series yet. Add content in Sanity Studio.</div>
                     ) : (
