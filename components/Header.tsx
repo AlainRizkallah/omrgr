@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { useState, useRef } from "react";
+
+const BACKDROP_IGNORE_MS = 400;
 
 type GalleryItem = { slug: string; title: string; seriesSlug: string; imageCount?: number };
 type SeriesItem = { slug: string; title: string; galleries: GalleryItem[] };
@@ -14,58 +15,54 @@ interface HeaderProps {
 
 const NAV_LINKS = [
   { href: "/info/about", label: "About" },
-  { href: "/info/cv", label: "CV" },
   { href: "/info/press", label: "Press" },
 ] as const;
 
 export default function Header({ seriesList, siteTitle }: HeaderProps) {
   const [worksOpen, setWorksOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerWorksOpen, setDrawerWorksOpen] = useState(false);
-  const [drawerInfoOpen, setDrawerInfoOpen] = useState(false);
+  const [openSeriesSlug, setOpenSeriesSlug] = useState<string | null>(null);
+  const worksOpenedAtRef = useRef(0);
+  const infoOpenedAtRef = useRef(0);
 
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const handler = () => {
-      if (mq.matches) setDrawerOpen(false);
-    };
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-
-  const closeDrawer = () => {
-    setDrawerOpen(false);
-    setDrawerWorksOpen(false);
-    setDrawerInfoOpen(false);
+  const handleWorksClick = () => {
+    const next = !worksOpen;
+    if (next) worksOpenedAtRef.current = Date.now();
+    setWorksOpen(next);
+    setInfoOpen(false);
+    setOpenSeriesSlug(null);
   };
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const handleWorksBackdropClick = () => {
+    if (Date.now() - worksOpenedAtRef.current < BACKDROP_IGNORE_MS) return;
+    setWorksOpen(false);
+    setOpenSeriesSlug(null);
+  };
+
+  const handleInfoClick = () => {
+    const next = !infoOpen;
+    if (next) infoOpenedAtRef.current = Date.now();
+    setInfoOpen(next);
+    setWorksOpen(false);
+  };
+
+  const handleInfoBackdropClick = () => {
+    if (Date.now() - infoOpenedAtRef.current < BACKDROP_IGNORE_MS) return;
+    setInfoOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-[hsl(var(--border))] bg-[hsl(var(--background))]/95 backdrop-blur">
-      <div className="mx-auto grid h-14 min-h-[44px] max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-6">
-        {/* Left: hamburger (mobile) + desktop nav */}
-        <div className="flex items-center gap-4">
-          {/* Hamburger: left side, mobile only */}
-          <button
-            type="button"
-            onClick={() => setDrawerOpen(true)}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-[hsl(var(--foreground))] hover:opacity-80 md:hidden"
-            aria-label="Open menu"
-            aria-expanded={drawerOpen}
-          >
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          {/* Desktop nav */}
-          <nav className="hidden items-center gap-5 text-xs tracking-wide md:flex" aria-label="Main">
+      <div className="mx-auto flex h-14 min-h-[44px] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <nav className="flex items-center gap-3 text-xs tracking-wide sm:gap-5" aria-label="Main">
             <div className="relative">
               <button
                 type="button"
-                onClick={() => { setWorksOpen((v) => !v); setInfoOpen(false); }}
+                onClick={handleWorksClick}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  handleWorksClick();
+                }}
                 className="min-h-[44px] min-w-[44px] py-2 text-left text-[hsl(var(--foreground))] hover:opacity-80"
                 aria-expanded={worksOpen}
                 aria-haspopup="true"
@@ -74,28 +71,90 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
               </button>
               {worksOpen && (
                 <>
-                  <div className="fixed inset-0 z-10" aria-hidden onClick={() => setWorksOpen(false)} />
-                  <div className="absolute left-0 top-full z-20 mt-1 min-w-[200px] border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-2 shadow-lg">
-                    {seriesList.map((series) => (
-                      <div key={series.slug} className="px-3 py-1">
-                        <span className="block text-[hsl(var(--muted-foreground))] font-medium">{series.title}</span>
-                        {(series.galleries || []).map((g) => (
-                          <Link
-                            key={`${series.slug}-${g.slug}`}
-                            href={`/works/${series.slug}/${g.slug}`}
-                            className="block py-1.5 pl-2 text-[hsl(var(--foreground))] hover:opacity-80"
-                            onClick={() => setWorksOpen(false)}
+                  <div
+                    className="fixed inset-0 z-10"
+                    aria-hidden
+                    onClick={handleWorksBackdropClick}
+                  />
+                  <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[220px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl">
+                    {seriesList.length === 0 ? (
+                      <div className="px-4 py-3 text-[hsl(var(--muted-foreground))] text-xs">No series yet. Add content in Sanity Studio.</div>
+                    ) : (
+                      seriesList.map((series) => (
+                        <div
+                          key={series.slug}
+                          className="relative"
+                          onMouseEnter={() => setOpenSeriesSlug(series.slug)}
+                          onMouseLeave={() => setOpenSeriesSlug(null)}
+                        >
+                          <button
+                            type="button"
+                            className="flex min-h-[40px] w-full items-center justify-between gap-2 rounded-md px-4 py-2.5 text-left text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                            onClick={() => {
+                              setOpenSeriesSlug((s) => {
+                                const next = s === series.slug ? null : series.slug;
+                                if (next) worksOpenedAtRef.current = Date.now();
+                                return next;
+                              });
+                            }}
+                            onTouchEnd={(e) => {
+                              e.preventDefault();
+                              worksOpenedAtRef.current = Date.now();
+                              setOpenSeriesSlug((s) => (s === series.slug ? null : series.slug));
+                            }}
+                            aria-expanded={openSeriesSlug === series.slug}
+                            aria-haspopup="true"
                           >
-                            {g.title}
-                            {g.imageCount != null && g.imageCount > 0 && (
-                              <span className="text-[hsl(var(--muted-foreground))]"> ({g.imageCount})</span>
-                            )}
-                          </Link>
-                        ))}
-                      </div>
-                    ))}
-                    {seriesList.length === 0 && (
-                      <div className="px-3 py-2 text-[hsl(var(--muted-foreground))] text-xs">No series yet. Add content in Sanity Studio.</div>
+                            <span className="font-medium">{series.title}</span>
+                            <svg
+                              className={`h-4 w-4 shrink-0 text-[hsl(var(--muted-foreground))] transition-transform duration-200 ${openSeriesSlug === series.slug ? "rotate-90" : ""}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              aria-hidden
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
+                          {openSeriesSlug === series.slug && (series.galleries?.length ?? 0) > 0 && (
+                            <>
+                              {/* Desktop: flyout to the right */}
+                              <div className="absolute left-full top-0 z-20 h-full w-2 hidden md:block" aria-hidden />
+                              <div className="absolute left-full top-0 z-30 ml-1 hidden min-w-[200px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl md:block">
+                                {(series.galleries || []).map((g) => (
+                                  <Link
+                                    key={`${series.slug}-${g.slug}`}
+                                    href={`/works/${series.slug}/${g.slug}`}
+                                    className="block rounded-md px-4 py-2.5 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                                    onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
+                                  >
+                                    {g.title}
+                                    {g.imageCount != null && g.imageCount > 0 && (
+                                      <span className="ml-1 text-[hsl(var(--muted-foreground))]">({g.imageCount})</span>
+                                    )}
+                                  </Link>
+                                ))}
+                              </div>
+                              {/* Mobile: inline expansion below series */}
+                              <div className="border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/50 py-1.5 md:hidden">
+                                {(series.galleries || []).map((g) => (
+                                  <Link
+                                    key={`${series.slug}-${g.slug}-inline`}
+                                    href={`/works/${series.slug}/${g.slug}`}
+                                    className="flex min-h-[40px] items-center rounded-md px-4 py-2.5 pl-6 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                                    onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
+                                  >
+                                    {g.title}
+                                    {g.imageCount != null && g.imageCount > 0 && (
+                                      <span className="ml-1 text-sm text-[hsl(var(--muted-foreground))]">({g.imageCount})</span>
+                                    )}
+                                  </Link>
+                                ))}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      ))
                     )}
                   </div>
                 </>
@@ -104,7 +163,11 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
             <div className="relative">
               <button
                 type="button"
-                onClick={() => { setInfoOpen((v) => !v); setWorksOpen(false); }}
+                onClick={handleInfoClick}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  handleInfoClick();
+                }}
                 className="min-h-[44px] min-w-[44px] py-2 text-left text-[hsl(var(--foreground))] hover:opacity-80"
                 aria-expanded={infoOpen}
                 aria-haspopup="true"
@@ -113,13 +176,13 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
               </button>
               {infoOpen && (
                 <>
-                  <div className="fixed inset-0 z-10" aria-hidden onClick={() => setInfoOpen(false)} />
-                  <div className="absolute left-0 top-full z-20 mt-1 min-w-[140px] border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-2 shadow-lg">
+                  <div className="fixed inset-0 z-10" aria-hidden onClick={handleInfoBackdropClick} />
+                  <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[160px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl">
                     {NAV_LINKS.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="block px-3 py-2 text-[hsl(var(--foreground))] hover:opacity-80"
+                        className="block min-h-[40px] rounded-md px-4 py-2.5 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
                         onClick={() => setInfoOpen(false)}
                       >
                         {link.label}
@@ -133,138 +196,14 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
               Contact
             </Link>
           </nav>
-        </div>
 
-        {/* Center: site title (centered on desktop via grid) */}
-        <div className="flex justify-center">
-          <Link
-            href="/"
-            className="font-serif-editorial text-base font-normal text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg"
-          >
-            {siteTitle || "OMRGR"}
-          </Link>
-        </div>
-
-        {/* Right: empty so grid keeps title centered */}
-        <div />
+        <Link
+          href="/"
+          className="shrink-0 font-serif-editorial text-base font-normal text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg"
+        >
+          {siteTitle || "OMRGR"}
+        </Link>
       </div>
-
-      {/* Mobile drawer: portal to body so overlay + panel cover full viewport */}
-      {mounted && drawerOpen && createPortal(
-        <>
-          <div
-            className="fixed inset-0 z-[100] bg-black/40 md:hidden"
-            aria-hidden
-            onClick={closeDrawer}
-          />
-          <aside
-            className="fixed top-0 left-0 bottom-0 z-[101] flex h-[100dvh] min-h-[100dvh] w-full max-w-[300px] flex-col bg-[hsl(var(--background))] shadow-2xl md:hidden"
-            role="dialog"
-            aria-label="Navigation menu"
-          >
-            <div className="flex h-14 shrink-0 items-center justify-between border-b border-[hsl(var(--border))] bg-[hsl(var(--background))] px-4">
-              <span className="font-serif-editorial text-sm font-medium text-[hsl(var(--foreground))]">Menu</span>
-              <button
-                type="button"
-                onClick={closeDrawer}
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
-                aria-label="Close menu"
-              >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <nav className="flex min-h-0 flex-1 flex-col overflow-auto border-t border-[hsl(var(--border))] bg-[hsl(var(--background))] py-2" aria-label="Main">
-              <div className="border-b border-[hsl(var(--border))]">
-                <button
-                  type="button"
-                  onClick={() => setDrawerWorksOpen((v) => !v)}
-                  className="flex min-h-[48px] w-full items-center justify-between px-4 text-left text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
-                  aria-expanded={drawerWorksOpen}
-                >
-                  <span className="font-medium">Works</span>
-                  <svg
-                    className={`h-4 w-4 shrink-0 transition-transform ${drawerWorksOpen ? "rotate-180" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {drawerWorksOpen && (
-                  <div className="border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-4 py-2">
-                    {seriesList.map((series) => (
-                      <div key={series.slug} className="py-2">
-                        <span className="block text-xs font-medium uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
-                          {series.title}
-                        </span>
-                        {(series.galleries || []).map((g) => (
-                          <Link
-                            key={`${series.slug}-${g.slug}`}
-                            href={`/works/${series.slug}/${g.slug}`}
-                            className="block py-2 pl-2 text-sm text-[hsl(var(--foreground))] hover:opacity-80"
-                            onClick={closeDrawer}
-                          >
-                            {g.title}
-                            {g.imageCount != null && g.imageCount > 0 && (
-                              <span className="text-[hsl(var(--muted-foreground))]"> ({g.imageCount})</span>
-                            )}
-                          </Link>
-                        ))}
-                      </div>
-                    ))}
-                    {seriesList.length === 0 && (
-                      <p className="py-2 text-xs text-[hsl(var(--muted-foreground))]">No series yet.</p>
-                    )}
-                  </div>
-                )}
-              </div>
-              <div className="border-b border-[hsl(var(--border))]">
-                <button
-                  type="button"
-                  onClick={() => setDrawerInfoOpen((v) => !v)}
-                  className="flex min-h-[48px] w-full items-center justify-between px-4 text-left text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
-                  aria-expanded={drawerInfoOpen}
-                >
-                  <span className="font-medium">Info</span>
-                  <svg
-                    className={`h-4 w-4 shrink-0 transition-transform ${drawerInfoOpen ? "rotate-180" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {drawerInfoOpen && (
-                  <div className="border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-4 py-2">
-                    {NAV_LINKS.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="block py-3 text-sm text-[hsl(var(--foreground))] hover:opacity-80"
-                        onClick={closeDrawer}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <Link
-                href="/contact"
-                className="flex min-h-[48px] items-center px-4 font-medium text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
-                onClick={closeDrawer}
-              >
-                Contact
-              </Link>
-            </nav>
-          </aside>
-        </>,
-        document.body
-      )}
     </header>
   );
 }
