@@ -16,10 +16,13 @@ interface GalleryFetchResult {
   slug: string
   seriesSlug: string
   seriesTitle: string
+  hideAllMediaSection?: boolean
   layoutBlocks?: Array<{
     _type: string
     _key?: string
     body?: unknown
+    font?: string
+    textSize?: string
     imageRef?: string
     imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
     caption?: string
@@ -87,7 +90,12 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
     .filter((b): b is NonNullable<typeof b> => b != null && b._type != null)
     .map((b) => {
       if (b._type === "galleryLayoutBlockText") {
-        return { type: "galleryLayoutBlockText", body: b.body ?? [] };
+        return {
+          type: "galleryLayoutBlockText",
+          body: b.body ?? [],
+          font: b.font ?? "serif",
+          textSize: b.textSize ?? "base",
+        };
       }
       if (b._type === "galleryLayoutBlockImage" && (b.imageRef || b.imageAsset?._id)) {
         const refId = b.imageRef ?? b.imageAsset?._id ?? "";
@@ -123,6 +131,7 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
     seriesTitle: g.seriesTitle,
     slug: g.slug,
     layoutBlocks: layoutBlocks.length > 0 ? layoutBlocks : undefined,
+    hideAllMediaSection: g.hideAllMediaSection ?? true,
     photos,
     otherGalleries,
   };

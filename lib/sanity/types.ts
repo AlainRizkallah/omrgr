@@ -23,7 +23,7 @@ export interface SeriesLink {
 
 /** Layout block for gallery page (custom content above All Media grid) */
 export type GalleryLayoutBlock =
-  | { type: "galleryLayoutBlockText"; body: unknown }
+  | { type: "galleryLayoutBlockText"; body: unknown; font?: string; textSize?: string }
   | { type: "galleryLayoutBlockImage"; src: string; alt: string; caption?: string; width?: number; height?: number };
 
 export interface GalleryData {
@@ -32,6 +32,7 @@ export interface GalleryData {
   seriesTitle: string;
   slug: string;
   layoutBlocks?: GalleryLayoutBlock[];
+  hideAllMediaSection?: boolean;
   photos: PhotoItem[];
   otherGalleries: GalleryLink[];
 }

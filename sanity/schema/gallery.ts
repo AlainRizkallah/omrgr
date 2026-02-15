@@ -1,4 +1,21 @@
 import { defineField, defineType } from "sanity";
+import { GalleryLayoutBlockTextInput } from "../components/GalleryLayoutBlockTextInput";
+
+/** Font choice for layout block text (matches site UI) */
+const LAYOUT_BLOCK_FONT_OPTIONS = [
+  { value: "serif", title: "Serif (editorial)" },
+  { value: "sans", title: "Sans" },
+] as const;
+
+/** Text size for layout block (matches site UI) */
+const LAYOUT_BLOCK_TEXT_SIZE_OPTIONS = [
+  { value: "sm", title: "Small" },
+  { value: "base", title: "Base" },
+  { value: "lg", title: "Large" },
+] as const;
+
+const FONT_LABELS: Record<string, string> = { serif: "Serif", sans: "Sans" };
+const TEXT_SIZE_LABELS: Record<string, string> = { sm: "Small", base: "Base", lg: "Large" };
 
 /** Text block for gallery custom layout (appears above All Media grid) */
 export const galleryLayoutBlockTextType = defineType({
@@ -7,16 +24,50 @@ export const galleryLayoutBlockTextType = defineType({
   type: "object",
   fields: [
     defineField({
+      name: "font",
+      type: "string",
+      title: "Font",
+      description: "Font used on the gallery page.",
+      options: {
+        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "serif",
+    }),
+    defineField({
+      name: "textSize",
+      type: "string",
+      title: "Text size",
+      description: "Base text size on the gallery page.",
+      options: {
+        list: [...LAYOUT_BLOCK_TEXT_SIZE_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "base",
+    }),
+    defineField({
       name: "body",
       type: "array",
       of: [{ type: "block" }],
+      title: "Content",
       description: "Rich text (paragraphs, bold, links, etc.)",
     }),
   ],
   preview: {
-    prepare() {
-      return { title: "Text block" };
+    select: { font: "font", textSize: "textSize" },
+    prepare({ font, textSize }) {
+      const fontLabel = FONT_LABELS[font] ?? "Serif";
+      const sizeLabel = TEXT_SIZE_LABELS[textSize] ?? "Base";
+      return {
+        title: "Text block",
+        subtitle: `${fontLabel}, ${sizeLabel}`,
+      };
     },
+  },
+  components: {
+    input: GalleryLayoutBlockTextInput,
   },
 });
 
@@ -103,6 +154,13 @@ export const galleryType = defineType({
         { type: "galleryLayoutBlockText" },
         { type: "galleryLayoutBlockImage" },
       ],
+    }),
+    defineField({
+      name: "hideAllMediaSection",
+      type: "boolean",
+      title: "Hide All Media section",
+      description: "When enabled, the All Media grid is hidden on the gallery page. Layout blocks (if any) are still shown.",
+      initialValue: true,
     }),
     defineField({
       name: "images",

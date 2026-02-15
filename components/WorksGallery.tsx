@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { PortableText } from "@portabletext/react";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import PhotoAlbum from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
@@ -11,22 +11,73 @@ import "react-photo-album/styles.css";
 import "yet-another-react-lightbox/styles.css";
 import type { PhotoItem, GalleryLayoutBlock } from "@/lib/sanity/types";
 
+/** Tailwind classes for layout block font (matches Sanity options) */
+function layoutBlockFontClass(font?: string): string {
+  return font === "sans" ? "font-sans" : "font-serif-editorial";
+}
+
+/** Tailwind text size scale for layout blocks (matches Sanity textSize) */
+const SIZE_SCALE = {
+  sm: { block: "text-sm", h1: "text-xl", h2: "text-lg", h3: "text-base", h4: "text-sm", blockquote: "text-sm border-l-2 border-muted-foreground/30 pl-4 italic" },
+  base: { block: "text-base", h1: "text-2xl", h2: "text-xl", h3: "text-lg", h4: "text-base", blockquote: "text-base border-l-2 border-muted-foreground/30 pl-4 italic" },
+  lg: { block: "text-lg", h1: "text-3xl", h2: "text-2xl", h3: "text-xl", h4: "text-lg", blockquote: "text-lg border-l-2 border-muted-foreground/30 pl-4 italic" },
+} as const;
+
+function layoutBlockTextSizeClass(textSize?: string): keyof typeof SIZE_SCALE {
+  return textSize === "sm" || textSize === "lg" ? textSize : "base";
+}
+
+/** PortableText components for gallery layout blocks: proper block styles and marks so output matches Sanity Studio hierarchy and formatting. */
+function galleryLayoutBlockComponents(textSize: keyof typeof SIZE_SCALE): PortableTextComponents {
+  const scale = SIZE_SCALE[textSize];
+  return {
+    block: {
+      normal: ({ children }) => <p className={`${scale.block} mb-3 last:mb-0`}>{children}</p>,
+      h1: ({ children }) => <h2 className={`${scale.h1} font-semibold tracking-tight mt-6 mb-2 first:mt-0`}>{children}</h2>,
+      h2: ({ children }) => <h3 className={`${scale.h2} font-semibold tracking-tight mt-5 mb-2 first:mt-0`}>{children}</h3>,
+      h3: ({ children }) => <h4 className={`${scale.h3} font-semibold mt-4 mb-1 first:mt-0`}>{children}</h4>,
+      h4: ({ children }) => <h5 className={`${scale.h4} font-semibold mt-3 mb-1 first:mt-0`}>{children}</h5>,
+      blockquote: ({ children }) => <blockquote className={`${scale.blockquote} my-3`}>{children}</blockquote>,
+    },
+    list: {
+      bullet: ({ children }) => <ul className="list-disc pl-6 space-y-1 mb-3">{children}</ul>,
+      number: ({ children }) => <ol className="list-decimal pl-6 space-y-1 mb-3">{children}</ol>,
+    },
+    listItem: {
+      bullet: ({ children }) => <li className={scale.block}>{children}</li>,
+      number: ({ children }) => <li className={scale.block}>{children}</li>,
+    },
+    marks: {
+      strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+      em: ({ children }) => <em>{children}</em>,
+      link: ({ value, children }) => (
+        <a href={value?.href} className="text-[hsl(var(--foreground))] underline underline-offset-2 hover:no-underline" target={value?.blank ? "_blank" : undefined} rel={value?.blank ? "noopener noreferrer" : undefined}>
+          {children}
+        </a>
+      ),
+      code: ({ children }) => <code className="font-mono text-[0.9em] bg-muted px-1.5 py-0.5 rounded">{children}</code>,
+    },
+  };
+}
+
 type OtherGallery = { slug: string; title: string; seriesSlug: string };
 
 interface WorksGalleryProps {
   title: string;
   seriesTitle: string;
   layoutBlocks?: GalleryLayoutBlock[];
+  hideAllMediaSection?: boolean;
   photos: PhotoItem[];
   otherGalleries: OtherGallery[];
 }
 
-export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos, otherGalleries }: WorksGalleryProps) {
+export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAllMediaSection = true, photos, otherGalleries }: WorksGalleryProps) {
   const [lightboxIndex, setLightboxIndex] = useState(-1);
 
   const slides = photos.map((p) => ({ src: p.src, width: p.width, height: p.height, alt: p.alt }));
   const hasLayoutBlocks = layoutBlocks && layoutBlocks.length > 0;
   const hasPhotos = photos.length > 0;
+  const showAllMedia = !hideAllMediaSection;
 
   if (!hasLayoutBlocks && !hasPhotos) {
     return (
@@ -51,12 +102,15 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
           <div className="mx-auto max-w-3xl space-y-8">
             {layoutBlocks!.map((block, i) => {
               if (block.type === "galleryLayoutBlockText" && block.body && Array.isArray(block.body) && block.body.length > 0) {
+                const fontClass = layoutBlockFontClass(block.font);
+                const sizeKey = layoutBlockTextSizeClass(block.textSize);
+                const components = galleryLayoutBlockComponents(sizeKey);
                 return (
                   <div
                     key={i}
-                    className="font-serif-editorial text-[15px] leading-relaxed text-[hsl(var(--foreground))] prose prose-p:mb-3 max-w-none"
+                    className={`${fontClass} ${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
                   >
-                    <PortableText value={block.body as object} />
+                    <PortableText value={block.body as object} components={components} />
                   </div>
                 );
               }
@@ -86,7 +140,8 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
         </section>
       )}
 
-      {/* All Media grid */}
+      {/* All Media grid (hidden when hideAllMediaSection is true) */}
+      {showAllMedia && (
       <section className="min-h-0 flex-1 overflow-auto px-2 py-4 sm:px-4">
         <div className="mx-auto max-w-7xl">
           {hasPhotos ? (
@@ -148,6 +203,7 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
           )}
         </div>
       </section>
+      )}
 
       {otherGalleries.length > 0 && (
         <section className="shrink-0 border-t border-[hsl(var(--border))] px-4 py-3 sm:px-6">

@@ -19,11 +19,14 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
   "slug": slug.current,
   "seriesSlug": series->slug.current,
   "seriesTitle": series->title,
+  hideAllMediaSection,
   "layoutBlocks": layoutBlocks[]{
     _type,
     _key,
     _type == "galleryLayoutBlockText" => {
-      "body": body
+      "body": body,
+      font,
+      textSize
     },
     _type == "galleryLayoutBlockImage" => {
       "imageRef": image.asset._ref,
