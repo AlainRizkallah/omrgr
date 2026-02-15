@@ -99,24 +99,26 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
       {/* Custom layout blocks (text and images) */}
       {hasLayoutBlocks && (
         <section className="shrink-0 border-b border-[hsl(var(--border))] px-4 py-6 sm:px-6">
-          <div className="mx-auto max-w-3xl space-y-8">
+          <div className="mx-auto space-y-8">
             {layoutBlocks!.map((block, i) => {
               if (block.type === "galleryLayoutBlockText" && block.body && Array.isArray(block.body) && block.body.length > 0) {
                 const fontClass = layoutBlockFontClass(block.font);
                 const sizeKey = layoutBlockTextSizeClass(block.textSize);
                 const components = galleryLayoutBlockComponents(sizeKey);
                 return (
-                  <div
-                    key={i}
-                    className={`${fontClass} ${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
-                  >
-                    <PortableText value={block.body as object} components={components} />
+                  <div key={i} className="mx-auto max-w-3xl">
+                    <div
+                      className={`${fontClass} ${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                    >
+                      <PortableText value={(block.body ?? []) as React.ComponentProps<typeof PortableText>["value"]} components={components} />
+                    </div>
                   </div>
                 );
               }
               if (block.type === "galleryLayoutBlockImage" && block.src) {
                 return (
-                  <figure key={i} className="space-y-2">
+                  <div key={i} className="mx-auto max-w-3xl">
+                  <figure className="space-y-2">
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[hsl(var(--muted))] sm:aspect-[3/2]">
                       <Image
                         src={block.src}
@@ -132,6 +134,63 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
                       </figcaption>
                     )}
                   </figure>
+                  </div>
+                );
+              }
+              if (block.type === "galleryLayoutBlockRow" && block.src) {
+                const fontClass = layoutBlockFontClass(block.font);
+                const sizeKey = layoutBlockTextSizeClass(block.textSize);
+                const components = galleryLayoutBlockComponents(sizeKey);
+                const mobileOrder = block.mobileOrder ?? "textFirst";
+                const textOrderClass = mobileOrder === "imageFirst" ? "order-2 md:order-none" : "order-1 md:order-none";
+                const imageOrderClass = mobileOrder === "imageFirst" ? "order-1 md:order-none" : "order-2 md:order-none";
+                const textCell = (
+                  <div className={`${textOrderClass} min-w-0`}>
+                    {block.body && Array.isArray(block.body) && block.body.length > 0 ? (
+                      <div className={`${fontClass} ${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}>
+                        <PortableText value={(block.body ?? []) as React.ComponentProps<typeof PortableText>["value"]} components={components} />
+                      </div>
+                    ) : (
+                      <p className="text-[hsl(var(--muted-foreground))] text-sm">No text.</p>
+                    )}
+                  </div>
+                );
+                const imageCell = (
+                  <div className={`${imageOrderClass} min-w-0`}>
+                    <figure className="space-y-2">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[hsl(var(--muted))] sm:aspect-[3/2]">
+                        <Image
+                          src={block.src}
+                          alt={block.alt}
+                          fill
+                          className="object-contain"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                      </div>
+                      {block.caption && (
+                        <figcaption className="text-center text-sm text-[hsl(var(--muted-foreground))]">
+                          {block.caption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  </div>
+                );
+                return (
+                  <div key={i} className="mx-auto w-full max-w-5xl">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 items-start">
+                      {block.layout === "imageLeft" ? (
+                        <>
+                          {imageCell}
+                          {textCell}
+                        </>
+                      ) : (
+                        <>
+                          {textCell}
+                          {imageCell}
+                        </>
+                      )}
+                    </div>
+                  </div>
                 );
               }
               return null;
@@ -159,13 +218,14 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
             breakpoints={[3840, 1920, 1280, 960, 640, 384]}
             onClick={({ index }) => setLightboxIndex(index)}
             render={{
-              photo: ({ wrapperStyle }, { photo }) => {
+              photo: (props, { photo }) => {
+                const wrapperStyle = "wrapperStyle" in props ? (props as { wrapperStyle?: React.CSSProperties }).wrapperStyle : undefined;
                 const p = photo as PhotoItem | undefined;
                 if (!p?.src) return <div style={wrapperStyle} />;
                 return (
                   <div
                     className="overflow-hidden rounded-lg"
-                    style={{ ...wrapperStyle }}
+                    style={wrapperStyle ? { ...wrapperStyle } : undefined}
                   >
                     <div
                       className="relative block h-full w-full cursor-pointer overflow-hidden rounded-lg"

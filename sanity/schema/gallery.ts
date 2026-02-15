@@ -95,6 +95,95 @@ export const galleryLayoutBlockImageType = defineType({
   },
 });
 
+const ROW_LAYOUT_OPTIONS = [
+  { value: "textLeft", title: "Text left, image right" },
+  { value: "imageLeft", title: "Image left, text right" },
+] as const;
+
+const ROW_MOBILE_ORDER_OPTIONS = [
+  { value: "textFirst", title: "Text first" },
+  { value: "imageFirst", title: "Image first" },
+] as const;
+
+/** Text + Image row: side-by-side on desktop, stacked on mobile */
+export const galleryLayoutBlockRowType = defineType({
+  name: "galleryLayoutBlockRow",
+  title: "Text + Image row",
+  type: "object",
+  fields: [
+    defineField({
+      name: "layout",
+      type: "string",
+      title: "Layout (desktop)",
+      description: "Which side is text, which is image.",
+      options: {
+        list: [...ROW_LAYOUT_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "textLeft",
+    }),
+    defineField({
+      name: "mobileOrder",
+      type: "string",
+      title: "Order on small screens",
+      description: "When stacked on mobile: text first or image first.",
+      options: {
+        list: [...ROW_MOBILE_ORDER_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+    }),
+    defineField({
+      name: "font",
+      type: "string",
+      title: "Font (text side)",
+      options: {
+        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "serif",
+    }),
+    defineField({
+      name: "textSize",
+      type: "string",
+      title: "Text size (text side)",
+      options: {
+        list: [...LAYOUT_BLOCK_TEXT_SIZE_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "base",
+    }),
+    defineField({
+      name: "body",
+      type: "array",
+      of: [{ type: "block" }],
+      title: "Content (text side)",
+      description: "Rich text for the text side of the row.",
+    }),
+    defineField({
+      name: "image",
+      type: "image",
+      title: "Image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "caption",
+      type: "string",
+      title: "Image caption",
+    }),
+  ],
+  preview: {
+    select: { layout: "layout" },
+    prepare({ layout }) {
+      const label = layout === "imageLeft" ? "Image left" : "Text left";
+      return { title: "Text + Image row", subtitle: label };
+    },
+  },
+});
+
 export const galleryImageType = defineType({
   name: "galleryImage",
   title: "Gallery Image",
@@ -153,6 +242,7 @@ export const galleryType = defineType({
       of: [
         { type: "galleryLayoutBlockText" },
         { type: "galleryLayoutBlockImage" },
+        { type: "galleryLayoutBlockRow" },
       ],
     }),
     defineField({

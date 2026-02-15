@@ -32,6 +32,16 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
       "imageRef": image.asset._ref,
       "imageAsset": image.asset->,
       "caption": caption
+    },
+    _type == "galleryLayoutBlockRow" => {
+      layout,
+      mobileOrder,
+      "body": body,
+      font,
+      textSize,
+      "imageRef": image.asset._ref,
+      "imageAsset": image.asset->,
+      "caption": caption
     }
   },
   "photos": images[]{

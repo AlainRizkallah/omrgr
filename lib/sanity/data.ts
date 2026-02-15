@@ -23,6 +23,8 @@ interface GalleryFetchResult {
     body?: unknown
     font?: string
     textSize?: string
+    layout?: string
+    mobileOrder?: string
     imageRef?: string
     imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
     caption?: string
@@ -105,6 +107,27 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
         const src = refId ? urlFor({ _ref: refId }).width(w).height(h).url() : "";
         return {
           type: "galleryLayoutBlockImage",
+          src,
+          alt: b.caption ?? "",
+          caption: b.caption,
+          width: w,
+          height: h,
+        };
+      }
+      if (b._type === "galleryLayoutBlockRow" && (b.imageRef || b.imageAsset?._id)) {
+        const refId = b.imageRef ?? b.imageAsset?._id ?? "";
+        const dims = b.imageAsset?.metadata?.dimensions;
+        const w = dims?.width ?? DEFAULT_W;
+        const h = dims?.height ?? DEFAULT_H;
+        const src = refId ? urlFor({ _ref: refId }).width(w).height(h).url() : "";
+        const layout = b.layout === "imageLeft" ? "imageLeft" : "textLeft";
+        return {
+          type: "galleryLayoutBlockRow",
+          layout,
+          mobileOrder: b.mobileOrder === "imageFirst" ? "imageFirst" : b.mobileOrder === "textFirst" ? "textFirst" : undefined,
+          body: b.body ?? [],
+          font: b.font ?? "serif",
+          textSize: b.textSize ?? "base",
           src,
           alt: b.caption ?? "",
           caption: b.caption,

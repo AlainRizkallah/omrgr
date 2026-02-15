@@ -4,6 +4,7 @@ import {
   galleryImageType,
   galleryLayoutBlockTextType,
   galleryLayoutBlockImageType,
+  galleryLayoutBlockRowType,
 } from "./gallery";
 import { infoPageType } from "./infoPage";
 import { contactType } from "./contact";
@@ -16,6 +17,7 @@ export const schemaTypes = [
   galleryImageType,
   galleryLayoutBlockTextType,
   galleryLayoutBlockImageType,
+  galleryLayoutBlockRowType,
   infoPageType,
   contactType,
   siteSettingsType,

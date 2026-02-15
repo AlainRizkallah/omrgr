@@ -57,16 +57,19 @@ The **Images** list in a Gallery is what appears on the site as the **“All Med
 
 You can shape how a gallery page looks by adding your own **text and images at the top**. Optionally, the **“All Media”** grid appears below (see **Hide All Media section** in 2.2).
 
-- **What it is**: Custom blocks (paragraphs, single images) show at the top of the gallery page. If **Hide All Media section** is *off*, the **All Media** section then shows the grid of everything in the **Images (All Media)** list.
+- **What it is**: Custom blocks (paragraphs, single images, or text+image rows) show at the top of the gallery page. If **Hide All Media section** is *off*, the **All Media** section then shows the grid of everything in the **Images (All Media)** list.
 - **Where to edit**: Open a **Gallery** document. Find **Hide All Media section** (controls whether the All Media grid is visible) and the **Layout blocks** section (above **Images (All Media)**).
 - **How to add blocks**:
   1. Click **Add item** in **Layout blocks**.
-  2. Choose **Text block** to add a paragraph (rich text: bold, links, lists), or **Image block** to add a single image with optional caption.
+  2. Choose:
+     - **Text block** — a full-width paragraph (rich text: bold, links, lists). Set Font and Text size, then add Content.
+     - **Image block** — a full-width single image with optional caption.
+     - **Text + Image row** — text and image side by side on desktop, stacked on small screens. Choose **Layout (desktop)**: “Text left, image right” or “Image left, text right”. Optionally set **Order on small screens**: “Text first” or “Image first”. Fill in Font, Text size, and **Content (text side)**; add **Image** and **Image caption**.
   3. You can add several blocks and **drag to reorder**. The order here is the order on the website.
   4. Click **Save** and **Publish** when ready.
 - **All Media**: The **Images (All Media)** list is the “All Media” section on the site. It only appears when **Hide All Media section** is *off*. When it appears, it shows *below* your custom layout blocks. You can reorder those images with the drag handle.
 
-**Tips**: Use layout blocks for an intro or a featured image; use All Media for the full set of works. With **Hide All Media section** *on* (default), the page shows only layout blocks—good for narrative or single-piece galleries. Turn it *off* to show the full image grid.
+**Tips**: Use layout blocks for an intro, a featured image, or a text+image row; use All Media for the full set of works. With **Hide All Media section** *on* (default), the page shows only layout blocks—good for narrative or single-piece galleries. Turn it *off* to show the full image grid.
 
 ### 2.5 Reordering galleries in the Works menu
 
@@ -133,6 +136,7 @@ You can shape how a gallery page looks by adding your own **text and images at t
 | Series + Gallery | Works menu and gallery pages            |
 | Gallery → Hide All Media section | When *on* (default), hides the All Media grid; when *off*, shows it |
 | Gallery → Layout blocks | Custom text/images at top of gallery page |
+| Gallery → Layout blocks → Text + Image row | Text and image in one row (side-by-side on desktop, stacked on mobile) |
 | Gallery → Images (All Media) | “All Media” grid on gallery page (only if Hide All Media section is *off*) |
 | Info Page        | About, CV, Press (under Info menu)      |
 | Contact          | Contact page                            |

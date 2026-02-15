@@ -24,7 +24,20 @@ export interface SeriesLink {
 /** Layout block for gallery page (custom content above All Media grid) */
 export type GalleryLayoutBlock =
   | { type: "galleryLayoutBlockText"; body: unknown; font?: string; textSize?: string }
-  | { type: "galleryLayoutBlockImage"; src: string; alt: string; caption?: string; width?: number; height?: number };
+  | { type: "galleryLayoutBlockImage"; src: string; alt: string; caption?: string; width?: number; height?: number }
+  | {
+      type: "galleryLayoutBlockRow";
+      layout: "textLeft" | "imageLeft";
+      mobileOrder?: "textFirst" | "imageFirst";
+      body: unknown;
+      font?: string;
+      textSize?: string;
+      src: string;
+      alt: string;
+      caption?: string;
+      width?: number;
+      height?: number;
+    };
 
 export interface GalleryData {
   title: string;
