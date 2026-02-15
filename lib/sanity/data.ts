@@ -16,7 +16,6 @@ interface GalleryFetchResult {
   slug: string
   seriesSlug: string
   seriesTitle: string
-  hideAllMediaSection?: boolean
   layoutBlocks?: Array<{
     _type: string
     _key?: string
@@ -40,43 +39,18 @@ interface GalleryFetchResult {
     imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
     caption?: string
   }>
-  photos: Array<{
-    asset: { _ref?: string; _id?: string } | null
-    dimensions?: { width: number; height: number } | null
-    alt?: string
-    caption?: string
-  }>
 }
-
-const DEFAULT_W = 1200;
-const DEFAULT_H = 800;
 
 const isSanityConfigured = () =>
   typeof process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "string" &&
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "placeholder";
-
-function photoFromSanity(
-  asset: { _ref?: string; _id?: string } | null,
-  dimensions: { width: number; height: number } | null | undefined,
-  alt: string,
-  title: string
-): PhotoItem {
-  const source = asset?._ref ? { _ref: asset._ref } : asset?._id ? { _ref: asset._id } : null;
-  if (!source) {
-    return { src: "", width: DEFAULT_W, height: DEFAULT_H, alt, title };
-  }
-  const w = dimensions?.width ?? DEFAULT_W;
-  const h = dimensions?.height ?? DEFAULT_H;
-  const src = urlFor(source).width(w).height(h).url();
-  return { src, width: w, height: h, alt: alt || title, title: title || alt };
-}
 
 export async function getSeriesList(): Promise<SeriesLink[]> {
   if (!isSanityConfigured()) return [];
   const data = await client.fetch<Array<{
     title: string
     slug: string
-    galleries: Array<{ slug: string; title: string; imageCount: number }>
+    galleries: Array<{ slug: string; title: string }>
   }>>(seriesListQuery);
   if (!data) return [];
   return data.map((s) => ({
@@ -86,7 +60,6 @@ export async function getSeriesList(): Promise<SeriesLink[]> {
       slug: g.slug,
       title: g.title,
       seriesSlug: s.slug,
-      imageCount: g.imageCount ?? 0,
     })),
   }));
 }
@@ -95,9 +68,7 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
   if (!isSanityConfigured()) return null;
   const g = await client.fetch<GalleryFetchResult | null>(galleryBySlugsQuery, { seriesSlug, gallerySlug });
   if (!g) return null;
-  const photos: PhotoItem[] = (g.photos || [])
-    .map((p) => photoFromSanity(p.asset, p.dimensions, p.alt || "", p.caption || p.alt || g.title))
-    .filter((p) => p.src !== "");
+  const photos: PhotoItem[] = [];
 
   const layoutBlocks: GalleryLayoutBlock[] = (g.layoutBlocks || [])
     .filter((b): b is NonNullable<typeof b> => b != null && b._type != null)
@@ -193,7 +164,7 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
   for (const series of seriesList) {
     for (const gal of series.galleries) {
       if (gal.seriesSlug !== g.seriesSlug || gal.slug !== g.slug) {
-        otherGalleries.push({ slug: gal.slug, title: gal.title, seriesSlug: gal.seriesSlug, imageCount: gal.imageCount });
+        otherGalleries.push({ slug: gal.slug, title: gal.title, seriesSlug: gal.seriesSlug });
       }
     }
   }
@@ -203,7 +174,6 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
     seriesTitle: g.seriesTitle,
     slug: g.slug,
     layoutBlocks: layoutBlocks.length > 0 ? layoutBlocks : undefined,
-    hideAllMediaSection: g.hideAllMediaSection ?? true,
     photos,
     otherGalleries,
   };

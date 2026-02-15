@@ -351,27 +351,13 @@ export const galleryType = defineType({
       name: "layoutBlocks",
       type: "array",
       title: "Layout blocks",
-      description: "Optional text and images shown at the top of this gallery page. Reorder by dragging. Below this, the Images list appears as \"All Media\" on the site.",
+      description: "Text and images for this gallery page. Reorder by dragging.",
       of: [
         { type: "galleryLayoutBlockText" },
         { type: "galleryLayoutBlockImage" },
         { type: "galleryLayoutBlockRow" },
         { type: "galleryLayoutBlockGrid" },
       ],
-    }),
-    defineField({
-      name: "hideAllMediaSection",
-      type: "boolean",
-      title: "Hide All Media section",
-      description: "When enabled, the All Media grid is hidden on the gallery page. Layout blocks (if any) are still shown.",
-      initialValue: true,
-    }),
-    defineField({
-      name: "images",
-      type: "array",
-      title: "Images (All Media)",
-      description: "All images shown in the All Media grid at the bottom of the gallery page.",
-      of: [{ type: "galleryImage" }],
     }),
   ],
 });

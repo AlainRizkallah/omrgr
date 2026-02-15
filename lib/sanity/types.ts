@@ -12,7 +12,6 @@ export interface GalleryLink {
   slug: string;
   title: string;
   seriesSlug: string;
-  imageCount?: number;
 }
 
 export interface SeriesLink {
@@ -51,7 +50,6 @@ export interface GalleryData {
   seriesTitle: string;
   slug: string;
   layoutBlocks?: GalleryLayoutBlock[];
-  hideAllMediaSection?: boolean;
   photos: PhotoItem[];
   otherGalleries: GalleryLink[];
 }

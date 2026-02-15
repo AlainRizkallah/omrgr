@@ -7,19 +7,17 @@ export const seriesListQuery = `*[_type == "series"] | order(order asc) {
   "galleries": galleries[]->{
     _id,
     title,
-    "slug": slug.current,
-    "imageCount": count(images)
+    "slug": slug.current
   }
 }`;
 
-/** GROQ: single gallery by series slug + gallery slug with images and layout blocks */
+/** GROQ: single gallery by series slug + gallery slug with layout blocks */
 export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gallerySlug && series->slug.current == $seriesSlug][0] {
   _id,
   title,
   "slug": slug.current,
   "seriesSlug": series->slug.current,
   "seriesTitle": series->title,
-  hideAllMediaSection,
   "layoutBlocks": layoutBlocks[]{
     _type,
     _key,
@@ -60,12 +58,6 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
         }
       }
     }
-  },
-  "photos": images[]{
-    "asset": asset->,
-    "dimensions": asset->.metadata.dimensions,
-    alt,
-    caption
   }
 }`;
 

@@ -17,7 +17,7 @@ This guide explains how to manage your showcase site content using Sanity. No te
 
 Works are organized in **Series** (e.g. “Relief Paintings”, “Chairs”). Each series contains **Galleries** (e.g. “Ready to Ship”, “Main”). What you create here appears in the **Works** menu in the top bar of the website.
 
-To add custom text or images *above* the gallery grid on a gallery page, see **Custom layout for a gallery** (section 2.4) below.
+Gallery pages are built with **Layout blocks** — see **Custom layout for a gallery** (section 2.3) below.
 
 ### 2.1 Creating a Series
 
@@ -135,8 +135,7 @@ You can shape how a gallery page looks by adding your own **text and images at t
 | Site Settings    | Title in the middle of the header       |
 | Home             | Homepage hero image and intro           |
 | Series + Gallery | Works menu and gallery pages            |
-| Gallery → Hide All Media section | When *on* (default), hides the All Media grid; when *off*, shows it |
-| Gallery → Layout blocks | Custom text/images at top of gallery page |
+| Gallery → Layout blocks | Text and images on the gallery page |
 | Gallery → Layout blocks → Text + Image row | Text and image in one row (side-by-side on desktop, stacked on mobile) |
 | Gallery → Layout blocks → Grid | Multi-column grid of text and image cells (responsive) |
 | Gallery → Images (All Media) | “All Media” grid on gallery page (only if Hide All Media section is *off*) |

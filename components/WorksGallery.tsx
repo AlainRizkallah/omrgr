@@ -1,14 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import PhotoAlbum from "react-photo-album";
-import Lightbox from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import "react-photo-album/styles.css";
-import "yet-another-react-lightbox/styles.css";
 import type { PhotoItem, GalleryLayoutBlock, GalleryGridCell } from "@/lib/sanity/types";
 
 /** Tailwind classes for layout block font (matches Sanity options) */
@@ -66,18 +60,13 @@ interface WorksGalleryProps {
   title: string;
   seriesTitle: string;
   layoutBlocks?: GalleryLayoutBlock[];
-  hideAllMediaSection?: boolean;
   photos: PhotoItem[];
   otherGalleries: OtherGallery[];
 }
 
-export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAllMediaSection = true, photos, otherGalleries }: WorksGalleryProps) {
-  const [lightboxIndex, setLightboxIndex] = useState(-1);
-
-  const slides = photos.map((p) => ({ src: p.src, width: p.width, height: p.height, alt: p.alt }));
+export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos, otherGalleries }: WorksGalleryProps) {
   const hasLayoutBlocks = layoutBlocks && layoutBlocks.length > 0;
   const hasPhotos = photos.length > 0;
-  const showAllMedia = !hideAllMediaSection;
 
   if (!hasLayoutBlocks && !hasPhotos) {
     return (
@@ -257,72 +246,6 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
         </section>
       )}
 
-      {/* All Media grid (hidden when hideAllMediaSection is true) */}
-      {showAllMedia && (
-      <section className="min-h-0 flex-1 overflow-auto px-2 py-4 sm:px-4">
-        <div className="mx-auto max-w-7xl">
-          {hasPhotos ? (
-            <>
-              <h2 className="mb-4 font-serif-editorial text-sm font-normal tracking-wide text-[hsl(var(--muted-foreground))] sm:mb-6">
-                All Media
-              </h2>
-              <PhotoAlbum
-            photos={photos}
-            layout="masonry"
-            columns={(w) => (w < 480 ? 2 : w < 768 ? 3 : w < 1024 ? 4 : w < 1280 ? 5 : 6)}
-            spacing={8}
-            padding={4}
-            defaultContainerWidth={1280}
-            breakpoints={[3840, 1920, 1280, 960, 640, 384]}
-            onClick={({ index }) => setLightboxIndex(index)}
-            render={{
-              photo: (props, { photo }) => {
-                const wrapperStyle = "wrapperStyle" in props ? (props as { wrapperStyle?: React.CSSProperties }).wrapperStyle : undefined;
-                const p = photo as PhotoItem | undefined;
-                if (!p?.src) return <div style={wrapperStyle} />;
-                return (
-                  <div
-                    className="overflow-hidden rounded-lg"
-                    style={wrapperStyle ? { ...wrapperStyle } : undefined}
-                  >
-                    <div
-                      className="relative block h-full w-full cursor-pointer overflow-hidden rounded-lg"
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => setLightboxIndex(photos.indexOf(p))}
-                      onKeyDown={(e) => e.key === "Enter" && setLightboxIndex(photos.indexOf(p))}
-                    >
-                      <Image
-                        src={p.src}
-                        alt={p.alt}
-                        width={p.width}
-                        height={p.height}
-                        className="object-contain transition hover:scale-[1.02]"
-                        style={{ width: "100%", height: "100%" }}
-                        sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                      />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity hover:opacity-100 flex items-end p-2 pointer-events-none">
-                        <span className="text-white text-xs truncate">{p.title}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              },
-            }}
-          />
-            </>
-          ) : (
-            <>
-              <h2 className="mb-4 font-serif-editorial text-sm font-normal tracking-wide text-[hsl(var(--muted-foreground))] sm:mb-6">
-                All Media
-              </h2>
-              <p className="text-[hsl(var(--muted-foreground))] text-sm">No images in this gallery yet. Add images in Sanity Studio.</p>
-            </>
-          )}
-        </div>
-      </section>
-      )}
-
       {otherGalleries.length > 0 && (
         <section className="shrink-0 border-t border-[hsl(var(--border))] px-4 py-3 sm:px-6">
           <p className="text-[hsl(var(--muted-foreground))] text-xs">
@@ -340,14 +263,6 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, hideAll
           </p>
         </section>
       )}
-
-      <Lightbox
-        open={lightboxIndex >= 0}
-        index={lightboxIndex}
-        close={() => setLightboxIndex(-1)}
-        slides={slides}
-        plugins={[Zoom]}
-      />
     </div>
   );
 }

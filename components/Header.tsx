@@ -5,7 +5,7 @@ import { useState, useRef } from "react";
 
 const BACKDROP_IGNORE_MS = 400;
 
-type GalleryItem = { slug: string; title: string; seriesSlug: string; imageCount?: number };
+type GalleryItem = { slug: string; title: string; seriesSlug: string };
 type SeriesItem = { slug: string; title: string; galleries: GalleryItem[] };
 
 interface HeaderProps {
@@ -113,9 +113,6 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                                     onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
                                   >
                                     {g.title}
-                                    {g.imageCount != null && g.imageCount > 0 && (
-                                      <span className="ml-1 text-[hsl(var(--muted-foreground))]">({g.imageCount})</span>
-                                    )}
                                   </Link>
                                 ))}
                               </div>
@@ -129,9 +126,6 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                                     onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
                                   >
                                     {g.title}
-                                    {g.imageCount != null && g.imageCount > 0 && (
-                                      <span className="ml-1 text-sm text-[hsl(var(--muted-foreground))]">({g.imageCount})</span>
-                                    )}
                                   </Link>
                                 ))}
                               </div>

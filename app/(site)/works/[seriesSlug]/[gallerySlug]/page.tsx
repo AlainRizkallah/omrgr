@@ -30,7 +30,6 @@ export default async function WorksGalleryPage({ params }: PageProps) {
         title={gallery.title}
         seriesTitle={gallery.seriesTitle}
         layoutBlocks={gallery.layoutBlocks}
-        hideAllMediaSection={gallery.hideAllMediaSection}
         photos={gallery.photos}
         otherGalleries={gallery.otherGalleries}
       />
