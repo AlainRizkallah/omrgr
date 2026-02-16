@@ -2,12 +2,12 @@ import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import type { HeroImageMargin } from "@/lib/sanity/types";
 
-/** Margin = max width of hero (centered). Large = 60%, medium = 75%, small = 90%, none = full width. */
+/** Max width of hero (centered). Small = compact, Medium = balanced, Large = wide, None = full width. */
 const HERO_MARGIN_CLASSES: Record<HeroImageMargin, string> = {
   none: "w-full",
-  small: "mx-auto w-full max-w-[90%]",
-  medium: "mx-auto w-full max-w-[80%]",
-  large: "mx-auto w-full max-w-[60%]",
+  small: "mx-auto w-full max-w-[38%]",
+  medium: "mx-auto w-full max-w-[60%]",
+  large: "mx-auto w-full max-w-[90%]",
 };
 
 interface HomeHeroProps {
@@ -23,7 +23,7 @@ export default function HomeHero({ heroImageUrl, heroImageMargin, intro, siteTit
     <div className="w-full">
       {heroImageUrl ? (
         <div className={`pt-4 sm:pt-6 ${marginClass}`}>
-          <div className="relative block w-full shrink-0 overflow-hidden rounded-lg bg-[hsl(var(--muted))] aspect-[21/9] min-h-[200px] sm:min-h-[260px]">
+          <div className="relative block w-full shrink-0 overflow-hidden bg-[hsl(var(--muted))] aspect-[21/9] min-h-[200px] sm:min-h-[260px]">
             <Image
             src={heroImageUrl}
             alt=""

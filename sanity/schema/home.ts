@@ -13,14 +13,14 @@ export const homeType = defineType({
     defineField({
       name: "heroImageMargin",
       type: "string",
-      title: "Hero image margin",
-      description: "Space around the hero image (more margin = smaller visible image)",
+      title: "Hero image size",
+      description: "Small = compact, Medium = balanced, Large = wide, None = edge to edge",
       options: {
         list: [
           { title: "None (edge to edge)", value: "none" },
-          { title: "Small", value: "small" },
-          { title: "Medium", value: "medium" },
-          { title: "Large", value: "large" },
+          { title: "Small (much smaller)", value: "small" },
+          { title: "Medium (average)", value: "medium" },
+          { title: "Large (wide)", value: "large" },
         ],
         layout: "radio",
       },
