@@ -88,7 +88,7 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
       {/* Custom layout blocks (text and images) */}
       {hasLayoutBlocks && (
         <section className="shrink-0 border-b border-[hsl(var(--border))] px-4 py-6 sm:px-6">
-          <div className="mx-auto space-y-8">
+          <div className="mx-auto space-y-32">
             {layoutBlocks!.map((block, i) => {
               if (block.type === "galleryLayoutBlockText" && block.body && Array.isArray(block.body) && block.body.length > 0) {
                 const fontClass = layoutBlockFontClass(block.font);
