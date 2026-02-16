@@ -49,7 +49,7 @@ The **Images** list in a Gallery is what appears on the site as the **“All Med
 4. For each item:
    - **Asset**: click to **upload** a new image (drag-and-drop or browse), or choose an existing one.
    - **Alt**: short description for accessibility (recommended).
-   - **Caption**: optional caption.
+   - **Caption**: optional caption. **Text below image**: optional rich text block (same formatting as text blocks) below the image.
 5. **Reordering**: use the **drag handle** (left side of each row) to change the order. The order here is the order on the site.
 6. Click **Save** (and **Publish** when you want changes to go live).
 
@@ -63,8 +63,8 @@ You can shape how a gallery page looks by adding your own **text and images at t
   1. Click **Add item** in **Layout blocks**.
   2. Choose:
      - **Text block** — a full-width paragraph (rich text: bold, links, lists). Set Font and Text size, then add Content.
-     - **Image block** — a full-width single image with optional caption.
-     - **Text + Image row** — text and image side by side on desktop, stacked on small screens. Choose **Layout (desktop)**: “Text left, image right” or “Image left, text right”. Optionally set **Order on small screens**: “Text first” or “Image first”. Fill in Font, Text size, and **Content (text side)**; add **Image** and **Image caption**.
+     - **Image block** — a full-width single image with optional **Caption** and optional **Text below image** (rich text, same formatting as text blocks).
+     - **Text + Image row** — text and image side by side on desktop, stacked on small screens. Choose **Layout (desktop)**: “Text left, image right” or “Image left, text right”. Optionally set **Order on small screens**: “Text first” or “Image first”. Fill in Font, Text size, and **Content (text side)**; add **Image**, optional **Image caption**, and optional **Text below image**.
      - **Grid** — a multi-column grid of text and image cells. Set **Columns (desktop)** to 2, 3, or 4. Add **Cells**: choose **Text** or **Image** for each cell (same options as the blocks above). Cells flow left-to-right, top-to-bottom. The layout is responsive (fewer columns on small screens).
   3. You can add several blocks and **drag to reorder**. The order here is the order on the website.
   4. Click **Save** and **Publish** when ready.

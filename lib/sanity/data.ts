@@ -34,10 +34,16 @@ interface GalleryFetchResult {
       imageRef?: string
       imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
       caption?: string
+      textBelowFont?: string
+      textBelowTextSize?: string
+      textBelowBody?: unknown
     }>
     imageRef?: string
     imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
     caption?: string
+    textBelowFont?: string
+    textBelowTextSize?: string
+    textBelowBody?: unknown
   }>
 }
 
@@ -92,6 +98,14 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
           src,
           alt: b.caption ?? "",
           caption: b.caption,
+          textBelow:
+            b.textBelowBody && Array.isArray(b.textBelowBody) && b.textBelowBody.length > 0
+              ? {
+                  font: b.textBelowFont ?? "serif",
+                  textSize: b.textBelowTextSize ?? "base",
+                  body: b.textBelowBody,
+                }
+              : undefined,
           width: w,
           height: h,
         };
@@ -113,6 +127,14 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
           src,
           alt: b.caption ?? "",
           caption: b.caption,
+          textBelow:
+            b.textBelowBody && Array.isArray(b.textBelowBody) && b.textBelowBody.length > 0
+              ? {
+                  font: b.textBelowFont ?? "serif",
+                  textSize: b.textBelowTextSize ?? "base",
+                  body: b.textBelowBody,
+                }
+              : undefined,
           width: w,
           height: h,
         };
@@ -142,6 +164,14 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
                 src,
                 alt: it.caption ?? "",
                 caption: it.caption,
+                textBelow:
+                  it.textBelowBody && Array.isArray(it.textBelowBody) && it.textBelowBody.length > 0
+                    ? {
+                        font: it.textBelowFont ?? "serif",
+                        textSize: it.textBelowTextSize ?? "base",
+                        body: it.textBelowBody,
+                      }
+                    : undefined,
                 width: w,
                 height: h,
               };

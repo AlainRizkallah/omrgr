@@ -85,6 +85,38 @@ export const galleryLayoutBlockImageType = defineType({
     defineField({
       name: "caption",
       type: "string",
+      title: "Caption",
+      description: "Optional short caption (e.g. for accessibility and figcaption).",
+    }),
+    defineField({
+      name: "textBelowFont",
+      type: "string",
+      title: "Font (text below)",
+      description: "Font for the optional text block below the image.",
+      options: {
+        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "serif",
+    }),
+    defineField({
+      name: "textBelowTextSize",
+      type: "string",
+      title: "Text size (text below)",
+      options: {
+        list: [...LAYOUT_BLOCK_TEXT_SIZE_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "base",
+    }),
+    defineField({
+      name: "textBelowBody",
+      type: "array",
+      of: [{ type: "block" }],
+      title: "Text below image",
+      description: "Optional rich text below the image (same formatting as text blocks: paragraphs, bold, links, lists).",
     }),
   ],
   preview: {
@@ -173,6 +205,36 @@ export const galleryLayoutBlockRowType = defineType({
       name: "caption",
       type: "string",
       title: "Image caption",
+      description: "Optional short caption for the image.",
+    }),
+    defineField({
+      name: "textBelowFont",
+      type: "string",
+      title: "Font (text below image)",
+      options: {
+        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "serif",
+    }),
+    defineField({
+      name: "textBelowTextSize",
+      type: "string",
+      title: "Text size (text below image)",
+      options: {
+        list: [...LAYOUT_BLOCK_TEXT_SIZE_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "base",
+    }),
+    defineField({
+      name: "textBelowBody",
+      type: "array",
+      of: [{ type: "block" }],
+      title: "Text below image",
+      description: "Optional rich text below the image (same formatting as text blocks).",
     }),
   ],
   preview: {
@@ -240,6 +302,37 @@ export const galleryGridCellImageType = defineType({
     defineField({
       name: "caption",
       type: "string",
+      title: "Caption",
+      description: "Optional short caption for the image.",
+    }),
+    defineField({
+      name: "textBelowFont",
+      type: "string",
+      title: "Font (text below)",
+      options: {
+        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "serif",
+    }),
+    defineField({
+      name: "textBelowTextSize",
+      type: "string",
+      title: "Text size (text below)",
+      options: {
+        list: [...LAYOUT_BLOCK_TEXT_SIZE_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "base",
+    }),
+    defineField({
+      name: "textBelowBody",
+      type: "array",
+      of: [{ type: "block" }],
+      title: "Text below image",
+      description: "Optional rich text below the image (same formatting as text blocks).",
     }),
   ],
   preview: {
@@ -315,6 +408,8 @@ export const galleryImageType = defineType({
     defineField({
       name: "caption",
       type: "string",
+      title: "Caption",
+      description: "Optional caption for the image.",
     }),
   ],
   preview: {

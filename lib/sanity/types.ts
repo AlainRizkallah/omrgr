@@ -20,15 +20,38 @@ export interface SeriesLink {
   galleries: GalleryLink[];
 }
 
+/** Optional rich text block below an image (same formatting as text blocks) */
+export interface ImageTextBelow {
+  font?: string;
+  textSize?: string;
+  body: unknown;
+}
+
 /** Cell inside a Grid layout block */
 export type GalleryGridCell =
   | { type: "galleryGridCellText"; body: unknown; font?: string; textSize?: string }
-  | { type: "galleryGridCellImage"; src: string; alt: string; caption?: string; width?: number; height?: number };
+  | {
+      type: "galleryGridCellImage";
+      src: string;
+      alt: string;
+      caption?: string;
+      textBelow?: ImageTextBelow;
+      width?: number;
+      height?: number;
+    };
 
 /** Layout block for gallery page (custom content above All Media grid) */
 export type GalleryLayoutBlock =
   | { type: "galleryLayoutBlockText"; body: unknown; font?: string; textSize?: string }
-  | { type: "galleryLayoutBlockImage"; src: string; alt: string; caption?: string; width?: number; height?: number }
+  | {
+      type: "galleryLayoutBlockImage";
+      src: string;
+      alt: string;
+      caption?: string;
+      textBelow?: ImageTextBelow;
+      width?: number;
+      height?: number;
+    }
   | {
       type: "galleryLayoutBlockRow";
       layout: "textLeft" | "imageLeft";
@@ -39,6 +62,7 @@ export type GalleryLayoutBlock =
       src: string;
       alt: string;
       caption?: string;
+      textBelow?: ImageTextBelow;
       width?: number;
       height?: number;
     }

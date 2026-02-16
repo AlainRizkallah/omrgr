@@ -105,8 +105,11 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
                 );
               }
               if (block.type === "galleryLayoutBlockImage" && block.src) {
+                const textBelowFontClass = layoutBlockFontClass(block.textBelow?.font);
+                const textBelowSizeKey = layoutBlockTextSizeClass(block.textBelow?.textSize);
+                const textBelowComponents = galleryLayoutBlockComponents(textBelowSizeKey);
                 return (
-                  <div key={i} className="mx-auto max-w-3xl">
+                  <div key={i} className="mx-auto max-w-3xl space-y-2">
                   <figure className="space-y-2">
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg sm:aspect-[3/2]">
                       <Image
@@ -123,6 +126,16 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
                       </figcaption>
                     )}
                   </figure>
+                    {block.textBelow?.body && Array.isArray(block.textBelow.body) && block.textBelow.body.length > 0 && (
+                      <div
+                        className={`${textBelowFontClass} ${SIZE_SCALE[textBelowSizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                      >
+                        <PortableText
+                          value={block.textBelow.body as React.ComponentProps<typeof PortableText>["value"]}
+                          components={textBelowComponents}
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               }
@@ -144,8 +157,11 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
                     )}
                   </div>
                 );
+                const imageTextBelowFontClass = layoutBlockFontClass(block.textBelow?.font);
+                const imageTextBelowSizeKey = layoutBlockTextSizeClass(block.textBelow?.textSize);
+                const imageTextBelowComponents = galleryLayoutBlockComponents(imageTextBelowSizeKey);
                 const imageCell = (
-                  <div className={`${imageOrderClass} min-w-0`}>
+                  <div className={`${imageOrderClass} min-w-0 space-y-2`}>
                     <figure className="space-y-2">
                       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg sm:aspect-[3/2]">
                         <Image
@@ -162,6 +178,16 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
                         </figcaption>
                       )}
                     </figure>
+                    {block.textBelow?.body && Array.isArray(block.textBelow.body) && block.textBelow.body.length > 0 && (
+                      <div
+                        className={`${imageTextBelowFontClass} ${SIZE_SCALE[imageTextBelowSizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                      >
+                        <PortableText
+                          value={block.textBelow.body as React.ComponentProps<typeof PortableText>["value"]}
+                          components={imageTextBelowComponents}
+                        />
+                      </div>
+                    )}
                   </div>
                 );
                 return (
@@ -213,8 +239,11 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
                           );
                         }
                         if (cell.type === "galleryGridCellImage" && cell.src) {
+                          const cellTextBelowFontClass = layoutBlockFontClass(cell.textBelow?.font);
+                          const cellTextBelowSizeKey = layoutBlockTextSizeClass(cell.textBelow?.textSize);
+                          const cellTextBelowComponents = galleryLayoutBlockComponents(cellTextBelowSizeKey);
                           return (
-                            <div key={j} className="min-w-0">
+                            <div key={j} className="min-w-0 space-y-2">
                               <figure className="space-y-2">
                                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg sm:aspect-[3/2]">
                                   <Image
@@ -231,6 +260,16 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
                                   </figcaption>
                                 )}
                               </figure>
+                              {cell.textBelow?.body && Array.isArray(cell.textBelow.body) && cell.textBelow.body.length > 0 && (
+                                <div
+                                  className={`${cellTextBelowFontClass} ${SIZE_SCALE[cellTextBelowSizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                                >
+                                  <PortableText
+                                    value={cell.textBelow.body as React.ComponentProps<typeof PortableText>["value"]}
+                                    components={cellTextBelowComponents}
+                                  />
+                                </div>
+                              )}
                             </div>
                           );
                         }

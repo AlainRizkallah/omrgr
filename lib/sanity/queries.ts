@@ -29,7 +29,10 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
     _type == "galleryLayoutBlockImage" => {
       "imageRef": image.asset._ref,
       "imageAsset": image.asset->,
-      "caption": caption
+      caption,
+      textBelowFont,
+      textBelowTextSize,
+      "textBelowBody": textBelowBody
     },
     _type == "galleryLayoutBlockRow" => {
       layout,
@@ -39,7 +42,10 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
       textSize,
       "imageRef": image.asset._ref,
       "imageAsset": image.asset->,
-      "caption": caption
+      caption,
+      textBelowFont,
+      textBelowTextSize,
+      "textBelowBody": textBelowBody
     },
     _type == "galleryLayoutBlockGrid" => {
       columns,
@@ -54,7 +60,10 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
         _type == "galleryGridCellImage" => {
           "imageRef": image.asset._ref,
           "imageAsset": image.asset->,
-          "caption": caption
+          caption,
+          textBelowFont,
+          textBelowTextSize,
+          "textBelowBody": textBelowBody
         }
       }
     }
