@@ -19,7 +19,7 @@ export default async function SiteLayout({
     <div className="flex min-h-screen flex-col">
       <Header seriesList={seriesList} siteTitle={siteTitle} />
       <main className="min-h-0 flex-1 flex flex-col">{children}</main>
-      <Footer seriesList={seriesList} />
+      <Footer />
     </div>
   );
 }

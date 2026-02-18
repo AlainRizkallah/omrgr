@@ -54,7 +54,7 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-[hsl(var(--background))]/95 backdrop-blur">
       <div className="mx-auto flex h-14 min-h-[44px] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <nav className="flex items-center gap-3 text-xs tracking-wide sm:gap-5" aria-label="Main">
+        <nav className="font-eczar flex items-center gap-3 text-xs tracking-wide sm:gap-5" aria-label="Main">
             <div className="relative">
               <button
                 type="button"
