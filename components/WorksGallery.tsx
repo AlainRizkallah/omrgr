@@ -2,8 +2,51 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRef, useState } from "react";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PhotoItem, GalleryLayoutBlock, GalleryGridCell } from "@/lib/sanity/types";
+
+/** Tiny gray image used as skeleton (scaled + blurred while loading). Commented out with skeleton.
+const BLUR_DATA_URL = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgdmlld0JveD0iMCAwIDEwIDEwIj48cmVjdCB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiNlNWU3ZWIiLz48L3N2Zz4=";
+*/
+
+function GalleryImage({
+  src,
+  alt,
+  fill,
+  className,
+  sizes,
+  priority,
+}: {
+  src: string;
+  alt: string;
+  fill?: boolean;
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+}) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {/* Loading skeleton (commented out; may re-enable later)
+      <div
+        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-300 ${loaded ? "opacity-0" : "opacity-100"}`}
+        style={{ backgroundImage: `url(${BLUR_DATA_URL})`, filter: "blur(12px)" }}
+        aria-hidden
+      />
+      */}
+      <Image
+        src={src}
+        alt={alt}
+        fill={fill}
+        className={`object-contain transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"} ${className ?? ""}`}
+        sizes={sizes}
+        priority={priority}
+        onLoad={() => setLoaded(true)}
+      />
+    </>
+  );
+}
 
 /** Tailwind classes for layout block font (matches Sanity options) */
 function layoutBlockFontClass(font?: string): string {
@@ -89,6 +132,12 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
   const blocks = layoutBlocks ?? [];
   const hasLayoutBlocks = blocks.length > 0;
   const hasPhotos = photos.length > 0;
+  const firstImagePriorityRef = useRef(true);
+  const getPriority = () => {
+    const p = firstImagePriorityRef.current;
+    firstImagePriorityRef.current = false;
+    return p;
+  };
 
   if (!hasLayoutBlocks && !hasPhotos) {
     return (
@@ -129,12 +178,12 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                   <div key={i} className="mx-auto w-full max-w-[1536px] space-y-2">
                   <figure className="space-y-2">
                     <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[3/2]">
-                      <Image
+                      <GalleryImage
                         src={block.src}
                         alt={block.alt}
                         fill
-                        className="object-contain"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1536px"
+                        priority={getPriority()}
                       />
                     </div>
                     {block.caption && (
@@ -183,12 +232,12 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                   <div className={`${imageOrderClass} min-w-0 space-y-2`}>
                     <figure className="space-y-2">
                       <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[3/2]">
-                        <Image
+                        <GalleryImage
                           src={block.src}
                           alt={block.alt}
                           fill
-                          className="object-contain"
                           sizes="(max-width: 768px) 100vw, (max-width: 1536px) 66vw, 1600px"
+                          priority={getPriority()}
                         />
                       </div>
                       {block.caption && (
@@ -267,12 +316,12 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                             <div key={j} className="min-w-0 space-y-2">
                               <figure className="space-y-2">
                                 <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[3/2]">
-                                    <Image
+                                  <GalleryImage
                                     src={cell.src}
                                     alt={cell.alt}
                                     fill
-                                    className="object-contain"
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 1152px"
+                                    priority={getPriority()}
                                   />
                                 </div>
                                 {cell.caption && (

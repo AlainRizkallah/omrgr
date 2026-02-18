@@ -45,10 +45,39 @@ Our Collaboration Series is a dedicated space for co-creation to explore new nar
   
 }
 
-/** Optional: return rich-text body for each Text+Image row. Default: one paragraph with a placeholder. */
-function rowTextForFile(seriesKey, fileName) {
+const ROW_TEMPLATE = {
+  year: "2025",
+  body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+};
+
+/** Optional: return Portable Text body (array of blocks) for each Text+Image row. Title (h3), date (italic), then body (normal). */
+function rowBodyForFile(seriesKey, fileName) {
   const baseName = path.basename(fileName, path.extname(fileName));
-  return `Description for ${baseName}. Edit in Sanity Studio or change this script.`;
+  const key = () => "b-" + Math.random().toString(36).slice(2, 10);
+  const spanKey = () => "s-" + Math.random().toString(36).slice(2, 10);
+  return [
+    {
+      _type: "block",
+      _key: key(),
+      style: "h3",
+      children: [{ _type: "span", _key: spanKey(), text: baseName }],
+      markDefs: [],
+    },
+    {
+      _type: "block",
+      _key: key(),
+      style: "normal",
+      children: [{ _type: "span", _key: spanKey(), text: ROW_TEMPLATE.year, marks: ["em"] }],
+      markDefs: [],
+    },
+    {
+      _type: "block",
+      _key: key(),
+      style: "normal",
+      children: [{ _type: "span", _key: spanKey(), text: ROW_TEMPLATE.body }],
+      markDefs: [],
+    },
+  ];
 }
 
 /** Build Portable Text body (array of block) from a plain string. Multiple paragraphs (split by \\n\\n) become multiple blocks. */
@@ -194,8 +223,7 @@ async function main() {
         console.warn(`Skip image ${file}:`, e.message);
         continue;
       }
-      const title = path.basename(file, path.extname(file));
-      const rowText = rowTextForFile(cfg.key, file);
+      const rowBody = rowBodyForFile(cfg.key, file);
 
       layoutBlocks.push({
         _type: "galleryLayoutBlockRow",
@@ -204,7 +232,7 @@ async function main() {
         mobileOrder: "textFirst",
         font: "eczar",
         textSize: "sm",
-        body: portableText(rowText),
+        body: rowBody,
         image: { _type: "image", asset: { _type: "reference", _ref: assetId } },
         // caption: title,
       });
