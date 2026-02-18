@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getGalleryBySlugs, getSeriesList } from "@/lib/sanity/data";
 import WorksGallery from "@/components/WorksGallery";
@@ -19,6 +20,14 @@ export async function generateStaticParams() {
   return params;
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { seriesSlug, gallerySlug } = await params;
+  const gallery = await getGalleryBySlugs(seriesSlug, gallerySlug);
+  if (!gallery) return { title: "Works" };
+  const title = gallery.isSingleGalleryInSeries ? gallery.title : `${gallery.seriesTitle} — ${gallery.title}`;
+  return { title };
+}
+
 export default async function WorksGalleryPage({ params }: PageProps) {
   const { seriesSlug, gallerySlug } = await params;
   const gallery = await getGalleryBySlugs(seriesSlug, gallerySlug);
@@ -29,6 +38,7 @@ export default async function WorksGalleryPage({ params }: PageProps) {
       <WorksGallery
         title={gallery.title}
         seriesTitle={gallery.seriesTitle}
+        hideSeriesInTitle={gallery.isSingleGalleryInSeries}
         layoutBlocks={gallery.layoutBlocks}
         photos={gallery.photos}
         otherGalleries={gallery.otherGalleries}

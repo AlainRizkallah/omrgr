@@ -72,6 +72,8 @@ export interface GalleryData {
   title: string;
   seriesSlug: string;
   seriesTitle: string;
+  /** True when this series has only one gallery; use to hide series name in titles/breadcrumbs. */
+  isSingleGalleryInSeries?: boolean;
   slug: string;
   layoutBlocks?: GalleryLayoutBlock[];
   photos: PhotoItem[];

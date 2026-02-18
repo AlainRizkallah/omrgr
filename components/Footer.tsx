@@ -11,7 +11,8 @@ export default function Footer({ seriesList }: FooterProps) {
   const links: { href: string; label: string }[] = [];
   seriesList.forEach((s) => {
     (s.galleries || []).forEach((g) => {
-      links.push({ href: `/works/${s.slug}/${g.slug}`, label: `${s.title} — ${g.title}` });
+      const label = (s.galleries?.length === 1) ? g.title : `${s.title} — ${g.title}`;
+      links.push({ href: `/works/${s.slug}/${g.slug}`, label });
     });
   });
 

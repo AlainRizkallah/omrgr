@@ -198,10 +198,13 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
       }
     }
   }
+  const currentSeries = seriesList.find((s) => s.slug === g.seriesSlug);
+  const isSingleGalleryInSeries = (currentSeries?.galleries?.length ?? 0) === 1;
   return {
     title: g.title,
     seriesSlug: g.seriesSlug,
     seriesTitle: g.seriesTitle,
+    isSingleGalleryInSeries,
     slug: g.slug,
     layoutBlocks: layoutBlocks.length > 0 ? layoutBlocks : undefined,
     photos,

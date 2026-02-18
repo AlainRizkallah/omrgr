@@ -59,12 +59,14 @@ type OtherGallery = { slug: string; title: string; seriesSlug: string };
 interface WorksGalleryProps {
   title: string;
   seriesTitle: string;
+  /** When true, do not show series name in the page title (e.g. single-gallery series). */
+  hideSeriesInTitle?: boolean;
   layoutBlocks?: GalleryLayoutBlock[];
   photos: PhotoItem[];
   otherGalleries: OtherGallery[];
 }
 
-export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos, otherGalleries }: WorksGalleryProps) {
+export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, layoutBlocks, photos, otherGalleries }: WorksGalleryProps) {
   const hasLayoutBlocks = layoutBlocks && layoutBlocks.length > 0;
   const hasPhotos = photos.length > 0;
 
@@ -81,7 +83,7 @@ export default function WorksGallery({ title, seriesTitle, layoutBlocks, photos,
     <div className="flex min-h-full flex-1 flex-col">
       <section className="shrink-0 border-b border-[hsl(var(--border))] px-4 py-3 sm:px-6">
         <h1 className="font-serif-editorial text-sm font-normal tracking-wide sm:text-base">
-          {seriesTitle} — {title}
+          {hideSeriesInTitle ? title : `${seriesTitle} — ${title}`}
         </h1>
       </section>
 

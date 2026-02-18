@@ -76,63 +76,78 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                     {seriesList.length === 0 ? (
                       <div className="px-4 py-3 text-[hsl(var(--muted-foreground))] text-xs">No series yet. Add content in Sanity Studio.</div>
                     ) : (
-                      seriesList.map((series) => (
-                        <div key={series.slug} className="relative">
-                          <button
-                            type="button"
-                            className="flex min-h-[40px] w-full items-center justify-between gap-2 rounded-md px-4 py-2.5 text-left text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              worksOpenedAtRef.current = Date.now();
-                              setOpenSeriesSlug((s) => (s === series.slug ? null : series.slug));
-                            }}
-                            aria-expanded={openSeriesSlug === series.slug}
-                            aria-haspopup="true"
-                          >
-                            <span className="font-medium">{series.title}</span>
-                            <svg
-                              className={`h-4 w-4 shrink-0 text-[hsl(var(--muted-foreground))] transition-transform duration-200 ${openSeriesSlug === series.slug ? "rotate-90" : ""}`}
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              aria-hidden
+                      seriesList.map((series) => {
+                        const singleGallery = (series.galleries?.length === 1) ? series.galleries[0] : null;
+                        if (singleGallery) {
+                          return (
+                            <Link
+                              key={series.slug}
+                              href={`/works/${series.slug}/${singleGallery.slug}`}
+                              className="flex min-h-[40px] w-full items-center rounded-md px-4 py-2.5 text-left font-medium text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                              onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
                             >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </button>
-                          {openSeriesSlug === series.slug && (series.galleries?.length ?? 0) > 0 && (
-                            <>
-                              {/* Desktop: flyout to the right */}
-                              <div className="absolute left-full top-0 z-20 h-full w-2 hidden md:block" aria-hidden />
-                              <div className="absolute left-full top-0 z-30 ml-1 hidden min-w-[200px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl md:block">
-                                {(series.galleries || []).map((g) => (
-                                  <Link
-                                    key={`${series.slug}-${g.slug}`}
-                                    href={`/works/${series.slug}/${g.slug}`}
-                                    className="block rounded-md px-4 py-2.5 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
-                                    onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
-                                  >
-                                    {g.title}
-                                  </Link>
-                                ))}
-                              </div>
-                              {/* Mobile: inline expansion below series */}
-                              <div className="border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/50 py-1.5 md:hidden">
-                                {(series.galleries || []).map((g) => (
-                                  <Link
-                                    key={`${series.slug}-${g.slug}-inline`}
-                                    href={`/works/${series.slug}/${g.slug}`}
-                                    className="flex min-h-[40px] items-center rounded-md px-4 py-2.5 pl-6 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
-                                    onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
-                                  >
-                                    {g.title}
-                                  </Link>
-                                ))}
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      ))
+                              {singleGallery.title}
+                            </Link>
+                          );
+                        }
+                        return (
+                          <div key={series.slug} className="relative">
+                            <button
+                              type="button"
+                              className="flex min-h-[40px] w-full items-center justify-between gap-2 rounded-md px-4 py-2.5 text-left text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                worksOpenedAtRef.current = Date.now();
+                                setOpenSeriesSlug((s) => (s === series.slug ? null : series.slug));
+                              }}
+                              aria-expanded={openSeriesSlug === series.slug}
+                              aria-haspopup="true"
+                            >
+                              <span className="font-medium">{series.title}</span>
+                              <svg
+                                className={`h-4 w-4 shrink-0 text-[hsl(var(--muted-foreground))] transition-transform duration-200 ${openSeriesSlug === series.slug ? "rotate-90" : ""}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                aria-hidden
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                            {openSeriesSlug === series.slug && (series.galleries?.length ?? 0) > 0 && (
+                              <>
+                                {/* Desktop: flyout to the right */}
+                                <div className="absolute left-full top-0 z-20 h-full w-2 hidden md:block" aria-hidden />
+                                <div className="absolute left-full top-0 z-30 ml-1 hidden min-w-[200px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl md:block">
+                                  {(series.galleries || []).map((g) => (
+                                    <Link
+                                      key={`${series.slug}-${g.slug}`}
+                                      href={`/works/${series.slug}/${g.slug}`}
+                                      className="block rounded-md px-4 py-2.5 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                                      onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
+                                    >
+                                      {g.title}
+                                    </Link>
+                                  ))}
+                                </div>
+                                {/* Mobile: inline expansion below series */}
+                                <div className="border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/50 py-1.5 md:hidden">
+                                  {(series.galleries || []).map((g) => (
+                                    <Link
+                                      key={`${series.slug}-${g.slug}-inline`}
+                                      href={`/works/${series.slug}/${g.slug}`}
+                                      className="flex min-h-[40px] items-center rounded-md px-4 py-2.5 pl-6 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                                      onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
+                                    >
+                                      {g.title}
+                                    </Link>
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        );
+                      })
                     )}
                   </div>
                 </>
