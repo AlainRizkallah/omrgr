@@ -15,6 +15,7 @@ interface HeaderProps {
 
 const NAV_LINKS = [
   { href: "/info/about", label: "About" },
+  { href: "/info/press", label: "Press" },
 ] as const;
 
 export default function Header({ seriesList, siteTitle }: HeaderProps) {
@@ -180,6 +181,9 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                 </>
               )}
             </div>
+            <Link href="/contact" className="min-h-[44px] -ml-1 flex items-center text-[hsl(var(--foreground))] hover:opacity-80 sm:-ml-2">
+              Contact
+            </Link>
           </nav>
 
         <Link

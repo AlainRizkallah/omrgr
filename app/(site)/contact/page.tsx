@@ -8,9 +8,6 @@ export default async function ContactPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      <h1 className="font-serif-editorial text-2xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
-        Contact
-      </h1>
       {contact?.body && Array.isArray(contact.body) && (contact.body as unknown[]).length > 0 ? (
         <div className="prose prose-neutral font-serif-editorial text-[15px] leading-relaxed">
           <PortableText value={contact.body as object} />

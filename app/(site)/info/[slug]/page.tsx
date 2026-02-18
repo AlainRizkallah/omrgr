@@ -30,7 +30,7 @@ export default async function InfoPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      {slug !== "about" && (
+      {slug !== "about" && slug !== "press" && (
         <h1 className="font-serif-editorial text-2xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
           {page.title}
         </h1>
