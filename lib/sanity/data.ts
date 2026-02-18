@@ -47,6 +47,9 @@ interface GalleryFetchResult {
   }>
 }
 
+const DEFAULT_W = 1200;
+const DEFAULT_H = 800;
+
 const isSanityConfigured = () =>
   typeof process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === "string" &&
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "placeholder";
@@ -92,7 +95,7 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
         const dims = b.imageAsset?.metadata?.dimensions;
         const w = dims?.width ?? DEFAULT_W;
         const h = dims?.height ?? DEFAULT_H;
-        const src = refId ? urlFor({ _ref: refId }).width(w).height(h).url() : "";
+        const src = refId ? urlFor({ _ref: refId }).width(w * 2).height(h * 2).url() : "";
         return {
           type: "galleryLayoutBlockImage",
           src,
@@ -115,7 +118,7 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
         const dims = b.imageAsset?.metadata?.dimensions;
         const w = dims?.width ?? DEFAULT_W;
         const h = dims?.height ?? DEFAULT_H;
-        const src = refId ? urlFor({ _ref: refId }).width(w).height(h).url() : "";
+        const src = refId ? urlFor({ _ref: refId }).width(w * 2).height(h * 2).url() : "";
         const layout = b.layout === "imageLeft" ? "imageLeft" : "textLeft";
         return {
           type: "galleryLayoutBlockRow",
@@ -158,7 +161,7 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
               const dims = it.imageAsset?.metadata?.dimensions;
               const w = dims?.width ?? DEFAULT_W;
               const h = dims?.height ?? DEFAULT_H;
-              const src = refId ? urlFor({ _ref: refId }).width(w).height(h).url() : "";
+              const src = refId ? urlFor({ _ref: refId }).width(w * 2).height(h * 2).url() : "";
               return {
                 type: "galleryGridCellImage" as const,
                 src,
@@ -206,7 +209,7 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
     seriesTitle: g.seriesTitle,
     isSingleGalleryInSeries,
     slug: g.slug,
-    layoutBlocks: layoutBlocks.length > 0 ? layoutBlocks : undefined,
+    layoutBlocks: layoutBlocks.length > 0 ? layoutBlocks : [],
     photos,
     otherGalleries,
   };

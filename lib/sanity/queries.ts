@@ -22,11 +22,13 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
     _type,
     _key,
     _type == "galleryLayoutBlockText" => {
+      "_type": _type,
       "body": body,
       font,
       textSize
     },
     _type == "galleryLayoutBlockImage" => {
+      "_type": _type,
       "imageRef": image.asset._ref,
       "imageAsset": image.asset->,
       caption,
@@ -35,6 +37,7 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
       "textBelowBody": textBelowBody
     },
     _type == "galleryLayoutBlockRow" => {
+      "_type": _type,
       layout,
       mobileOrder,
       "body": body,
@@ -48,6 +51,7 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
       "textBelowBody": textBelowBody
     },
     _type == "galleryLayoutBlockGrid" => {
+      "_type": _type,
       columns,
       "items": items[]{
         _type,

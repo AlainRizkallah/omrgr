@@ -34,12 +34,16 @@ const INTRO_TEXTS = {
 Each piece in this limited series collection is carved from high-end American Walnut and aromatic Cedar timbers chosen for their enduring character and rich grain. But the soul of these chairs comes from their creation. We partner directly with local workshops, reviving age-old joinery and finishing methods that have been passed down through generations.
 
 This collaboration is more than a production process; it is a commitment to empowering our artisan community. By bridging contemporary design with traditional expertise, we are building a sustainable, mutually beneficial relationship between concept and craft ensuring that every chair is as ethical as it is beautiful.`,
-  "sculptural-lamps": `Our sculptural lamps are born from the coast of North Lebanon, where the sea is a way of life. This collection is a personal tribute to my hometown, a celebration of the hands that have built and repaired our local fishing fleet for generations.
+  lamps: `Our sculptural lamps are born from the coast of North Lebanon, where the sea is a way of life. This collection is a personal tribute to my hometown, a celebration of the hands that have built and repaired our local fishing fleet for generations.
 
 We have partnered directly with the local fisherman community, translating the industrial strength of boat-building into delicate, luminous forms. Using the same raw fiberglass and resin that protect vessels against the Mediterranean waves, we are casting light through a material traditionally reserved for the sea.
 
 This collaboration creates a new dialogue between design and survival skills. By applying these age-old boat-building methods to contemporary lighting, we are empowering the artisan community with a sustainable new craft preserving their expertise while illuminating our interiors with the soul of the coast.`,
-  };
+  collaborations: `We believe that the boldest ideas emerge when disciplines collide. We actively seek to dissolve the boundaries between architecture, art, and product design by joining forces with fellow visionaries.
+
+Our Collaboration Series is a dedicated space for co-creation to explore new narratives in form and space. Whether it is a limited edition furniture capsule or a site specific interior installation, these projects are born from a shared dialogue, merging our distinct voices to create a singular, unique expression that neither of us could achieve alone.`,
+  
+}
 
 /** Optional: return rich-text body for each Text+Image row. Default: one paragraph with a placeholder. */
 function rowTextForFile(seriesKey, fileName) {
@@ -118,9 +122,10 @@ async function uploadImage(filePath) {
 /** Gallery config: folder under Pictures/, intro text key, and Sanity series + gallery slugs. */
 const GALLERY_CONFIG = [
   { folder: "Chairs", key: "chairs", seriesSlug: "collectable-design", gallerySlug: "sculptural-chairs" },
-  { folder: "Lamps", key: "sculptural-lamps", seriesSlug: "collectable-design", gallerySlug: "sculptural-lamps" },
+  { folder: "Lamps", key: "lamps", seriesSlug: "collectable-design", gallerySlug: "sculptural-lamps" },
   { folder: "Paintings", key: "paintings", seriesSlug: "paintings", gallerySlug: "all-paintings" },
   { folder: "Interior Design", key: "interior-design", seriesSlug: "interior-design", gallerySlug: "interior-designs" },
+  { folder: "Collaborations", key: "collaborations", seriesSlug: "collectable-design", gallerySlug: "collaborations" },
 ];
 
 function findGalleryForConfig(galleries, cfg) {
@@ -166,14 +171,17 @@ async function main() {
 
     const layoutBlocks = [];
 
-    // 1. Intro text block (Serif, Small)
-    layoutBlocks.push({
-      _type: "galleryLayoutBlockText",
-      _key: "intro-" + cfg.key,
-      font: "Eczar",
-      textSize: "sm",
-      body: portableText(introText),
-    });
+    // 1. Intro text block (Serif, Small) — only if intro text is set
+    const introTrimmed = (introText || "").trim();
+    if (introTrimmed) {
+      layoutBlocks.push({
+        _type: "galleryLayoutBlockText",
+        _key: "intro-" + cfg.key,
+        font: "eczar",
+        textSize: "sm",
+        body: portableText(introText),
+      });
+    }
 
     // 2. One Text + Image row per image (text left, image right, text first, Serif, Small)
     for (let i = 0; i < files.length; i++) {
@@ -194,7 +202,7 @@ async function main() {
         _key: "row-" + cfg.key + "-" + i + "-" + Date.now(),
         layout: "textLeft",
         mobileOrder: "textFirst",
-        font: "Eczar",
+        font: "eczar",
         textSize: "sm",
         body: portableText(rowText),
         image: { _type: "image", asset: { _type: "reference", _ref: assetId } },

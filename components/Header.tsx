@@ -15,7 +15,6 @@ interface HeaderProps {
 
 const NAV_LINKS = [
   { href: "/info/about", label: "About" },
-  { href: "/info/press", label: "Press" },
 ] as const;
 
 export default function Header({ seriesList, siteTitle }: HeaderProps) {
@@ -52,7 +51,7 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[hsl(var(--border))] bg-[hsl(var(--background))]/95 backdrop-blur">
+    <header className="sticky top-0 z-50 bg-[hsl(var(--background))]/95 backdrop-blur">
       <div className="mx-auto flex h-14 min-h-[44px] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <nav className="flex items-center gap-3 text-xs tracking-wide sm:gap-5" aria-label="Main">
             <div className="relative">
@@ -72,7 +71,7 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                     aria-hidden
                     onClick={handleWorksBackdropClick}
                   />
-                  <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[220px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl max-h-[70vh] overflow-y-auto md:max-h-none md:overflow-visible">
+                  <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[220px] bg-[hsl(var(--background))] py-1.5 shadow-xl max-h-[70vh] overflow-y-auto md:max-h-none md:overflow-visible">
                     {seriesList.length === 0 ? (
                       <div className="px-4 py-3 text-[hsl(var(--muted-foreground))] text-xs">No series yet. Add content in Sanity Studio.</div>
                     ) : (
@@ -83,7 +82,7 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                             <Link
                               key={series.slug}
                               href={`/works/${series.slug}/${singleGallery.slug}`}
-                              className="flex min-h-[40px] w-full items-center rounded-md px-4 py-2.5 text-left font-medium text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                              className="flex min-h-[40px] w-full items-center px-4 py-2.5 text-left font-medium text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
                               onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
                             >
                               {singleGallery.title}
@@ -94,7 +93,7 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                           <div key={series.slug} className="relative">
                             <button
                               type="button"
-                              className="flex min-h-[40px] w-full items-center justify-between gap-2 rounded-md px-4 py-2.5 text-left text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                              className="flex min-h-[40px] w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 worksOpenedAtRef.current = Date.now();
@@ -117,13 +116,13 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                             {openSeriesSlug === series.slug && (series.galleries?.length ?? 0) > 0 && (
                               <>
                                 {/* Desktop: flyout to the right */}
-                                <div className="absolute left-full top-0 z-20 h-full w-2 hidden md:block" aria-hidden />
-                                <div className="absolute left-full top-0 z-30 ml-1 hidden min-w-[200px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl md:block">
+                                <div className="absolute left-full top-0 z-20 h-full w-0 hidden md:block" aria-hidden />
+                                <div className="absolute left-full top-0 z-30 hidden min-w-[200px] bg-[hsl(var(--background))] py-1.5 shadow-xl md:block">
                                   {(series.galleries || []).map((g) => (
                                     <Link
                                       key={`${series.slug}-${g.slug}`}
                                       href={`/works/${series.slug}/${g.slug}`}
-                                      className="block rounded-md px-4 py-2.5 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                                      className="block px-4 py-2.5 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
                                       onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
                                     >
                                       {g.title}
@@ -131,12 +130,12 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                                   ))}
                                 </div>
                                 {/* Mobile: inline expansion below series */}
-                                <div className="border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/50 py-1.5 md:hidden">
+                                <div className="bg-[hsl(var(--muted))]/50 pb-1.5 pt-0 md:hidden">
                                   {(series.galleries || []).map((g) => (
                                     <Link
                                       key={`${series.slug}-${g.slug}-inline`}
                                       href={`/works/${series.slug}/${g.slug}`}
-                                      className="flex min-h-[40px] items-center rounded-md px-4 py-2.5 pl-6 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                                      className="flex min-h-[40px] items-center px-4 py-2.5 pl-6 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
                                       onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
                                     >
                                       {g.title}
@@ -166,12 +165,12 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
               {infoOpen && (
                 <>
                   <div className="fixed inset-0 z-10" aria-hidden onClick={handleInfoBackdropClick} />
-                  <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[160px] rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] py-1.5 shadow-xl">
+                  <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[160px] bg-[hsl(var(--background))] py-1.5 shadow-xl">
                     {NAV_LINKS.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="block min-h-[40px] rounded-md px-4 py-2.5 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                        className="block min-h-[40px] px-4 py-2.5 text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
                         onClick={() => setInfoOpen(false)}
                       >
                         {link.label}
@@ -181,9 +180,6 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                 </>
               )}
             </div>
-            <Link href="/contact" className="min-h-[44px] -ml-1 flex items-center text-[hsl(var(--foreground))] hover:opacity-80 sm:-ml-2">
-              Contact
-            </Link>
           </nav>
 
         <Link
