@@ -7,7 +7,16 @@ import type { PhotoItem, GalleryLayoutBlock, GalleryGridCell } from "@/lib/sanit
 
 /** Tailwind classes for layout block font (matches Sanity options) */
 function layoutBlockFontClass(font?: string): string {
-  return font === "sans" ? "font-sans" : "font-serif-editorial";
+  switch (font) {
+    case "sans":
+      return "font-sans";
+    case "eczar":
+      return "font-eczar";
+    case "hal-timezone":
+      return "font-hal-timezone";
+    default:
+      return "font-serif-editorial";
+  }
 }
 
 /** Tailwind text size scale for layout blocks (matches Sanity textSize) */

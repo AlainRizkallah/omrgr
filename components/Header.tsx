@@ -181,16 +181,17 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                 </>
               )}
             </div>
-            <Link href="/contact" className="min-h-[44px] flex items-center text-[hsl(var(--foreground))] hover:opacity-80">
+            <Link href="/contact" className="min-h-[44px] -ml-1 flex items-center text-[hsl(var(--foreground))] hover:opacity-80 sm:-ml-2">
               Contact
             </Link>
           </nav>
 
         <Link
           href="/"
-          className="shrink-0 font-serif-editorial text-base font-normal text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg"
+          className="relative shrink-0 font-serif-editorial text-base font-normal text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg"
         >
           {siteTitle || "OMRGR"}
+          <span className="absolute -top-0.5 -right-3 text-[0.5em] leading-none opacity-70" aria-hidden>®</span>
         </Link>
       </div>
     </header>

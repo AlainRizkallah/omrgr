@@ -1,11 +1,13 @@
 import { defineField, defineType } from "sanity";
 import { GalleryLayoutBlockTextInput } from "../components/GalleryLayoutBlockTextInput";
 
-/** Font choice for layout block text (matches site UI) */
-const LAYOUT_BLOCK_FONT_OPTIONS = [
+/** Font choice for layout block text (matches site UI). Use a plain array so Sanity Studio shows all options. */
+const LAYOUT_BLOCK_FONT_OPTIONS: { value: string; title: string }[] = [
   { value: "serif", title: "Serif (editorial)" },
   { value: "sans", title: "Sans" },
-] as const;
+  { value: "eczar", title: "Eczar" },
+  { value: "hal-timezone", title: "HAL Timezone" },
+];
 
 /** Text size for layout block (matches site UI) */
 const LAYOUT_BLOCK_TEXT_SIZE_OPTIONS = [
@@ -14,7 +16,12 @@ const LAYOUT_BLOCK_TEXT_SIZE_OPTIONS = [
   { value: "lg", title: "Large" },
 ] as const;
 
-const FONT_LABELS: Record<string, string> = { serif: "Serif", sans: "Sans" };
+const FONT_LABELS: Record<string, string> = {
+  serif: "Serif",
+  sans: "Sans",
+  eczar: "Eczar",
+  "hal-timezone": "HAL Timezone",
+};
 const TEXT_SIZE_LABELS: Record<string, string> = { sm: "Small", base: "Base", lg: "Large" };
 
 /** Text block for gallery custom layout (appears above All Media grid) */

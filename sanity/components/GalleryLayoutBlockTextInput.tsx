@@ -6,6 +6,8 @@ import type { ObjectInputProps } from "sanity";
 const FONT_STYLES: Record<string, string> = {
   serif: "Georgia, 'Times New Roman', serif",
   sans: "system-ui, -apple-system, sans-serif",
+  eczar: "'Eczar', Georgia, serif",
+  "hal-timezone": "'HALTimezone-Regular', sans-serif",
 };
 
 const FONT_SIZES: Record<string, string> = {

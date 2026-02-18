@@ -29,10 +29,17 @@ const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"]);
 
 // ——— Config: edit intro texts and row text here ———
 const INTRO_TEXTS = {
-  chairs: "Sculptural chairs that combine form and function. Each piece is designed to stand as both seating and sculpture.",
-  paintings: "A selection of paintings exploring texture, colour, and composition. Each work is part of an ongoing visual dialogue.",
-  "interior-design": "Interior design concepts and realised spaces. Mid-century modern and contemporary references.",
-};
+  chairs: `Our sculptural chairs are not just objects of utility; they are artistic statements born from a dialogue between the designer's vision and the maker's hand. We believe that true luxury lies in the story behind the object.
+
+Each piece in this limited series collection is carved from high-end American Walnut and aromatic Cedar timbers chosen for their enduring character and rich grain. But the soul of these chairs comes from their creation. We partner directly with local workshops, reviving age-old joinery and finishing methods that have been passed down through generations.
+
+This collaboration is more than a production process; it is a commitment to empowering our artisan community. By bridging contemporary design with traditional expertise, we are building a sustainable, mutually beneficial relationship between concept and craft ensuring that every chair is as ethical as it is beautiful.`,
+  "sculptural-lamps": `Our sculptural lamps are born from the coast of North Lebanon, where the sea is a way of life. This collection is a personal tribute to my hometown, a celebration of the hands that have built and repaired our local fishing fleet for generations.
+
+We have partnered directly with the local fisherman community, translating the industrial strength of boat-building into delicate, luminous forms. Using the same raw fiberglass and resin that protect vessels against the Mediterranean waves, we are casting light through a material traditionally reserved for the sea.
+
+This collaboration creates a new dialogue between design and survival skills. By applying these age-old boat-building methods to contemporary lighting, we are empowering the artisan community with a sustainable new craft preserving their expertise while illuminating our interiors with the soul of the coast.`,
+  };
 
 /** Optional: return rich-text body for each Text+Image row. Default: one paragraph with a placeholder. */
 function rowTextForFile(seriesKey, fileName) {
@@ -40,16 +47,16 @@ function rowTextForFile(seriesKey, fileName) {
   return `Description for ${baseName}. Edit in Sanity Studio or change this script.`;
 }
 
-/** Build Portable Text body (array of block) from a plain string. */
+/** Build Portable Text body (array of block) from a plain string. Multiple paragraphs (split by \\n\\n) become multiple blocks. */
 function portableText(text) {
-  return [
-    {
-      _type: "block",
-      _key: "b-" + Math.random().toString(36).slice(2, 10),
-      children: [{ _type: "span", _key: "s1", text }],
-      markDefs: [],
-    },
-  ];
+  const paragraphs = (text || "").split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+  if (paragraphs.length === 0) paragraphs.push("");
+  return paragraphs.map((para) => ({
+    _type: "block",
+    _key: "b-" + Math.random().toString(36).slice(2, 10),
+    children: [{ _type: "span", _key: "s1", text: para }],
+    markDefs: [],
+  }));
 }
 
 async function querySanity(groq) {
@@ -111,6 +118,7 @@ async function uploadImage(filePath) {
 /** Gallery config: folder under Pictures/, intro text key, and Sanity series + gallery slugs. */
 const GALLERY_CONFIG = [
   { folder: "Chairs", key: "chairs", seriesSlug: "collectable-design", gallerySlug: "sculptural-chairs" },
+  { folder: "Lamps", key: "sculptural-lamps", seriesSlug: "collectable-design", gallerySlug: "sculptural-lamps" },
   { folder: "Paintings", key: "paintings", seriesSlug: "paintings", gallerySlug: "all-paintings" },
   { folder: "Interior Design", key: "interior-design", seriesSlug: "interior-design", gallerySlug: "interior-designs" },
 ];
@@ -146,7 +154,7 @@ async function main() {
       continue;
     }
 
-    const introText = INTRO_TEXTS[cfg.key] ?? "Add intro text in the script (INTRO_TEXTS).";
+    const introText = INTRO_TEXTS[cfg.key] ?? "";
     const dir = path.join(PICTURES_DIR, cfg.folder);
     if (!fs.existsSync(dir)) {
       console.warn(`Folder not found: ${dir}. Setting only intro block.`);
@@ -162,7 +170,7 @@ async function main() {
     layoutBlocks.push({
       _type: "galleryLayoutBlockText",
       _key: "intro-" + cfg.key,
-      font: "serif",
+      font: "Eczar",
       textSize: "sm",
       body: portableText(introText),
     });
@@ -186,11 +194,11 @@ async function main() {
         _key: "row-" + cfg.key + "-" + i + "-" + Date.now(),
         layout: "textLeft",
         mobileOrder: "textFirst",
-        font: "serif",
+        font: "Eczar",
         textSize: "sm",
         body: portableText(rowText),
         image: { _type: "image", asset: { _type: "reference", _ref: assetId } },
-        caption: title,
+        // caption: title,
       });
     }
 
