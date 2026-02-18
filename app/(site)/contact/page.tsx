@@ -9,11 +9,11 @@ export default async function ContactPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       {contact?.body && Array.isArray(contact.body) && (contact.body as unknown[]).length > 0 ? (
-        <div className="prose prose-neutral font-serif-editorial text-[15px] leading-relaxed">
+        <div className="prose prose-neutral font-eczar text-[13px] leading-relaxed">
           <PortableText value={contact.body as object} />
         </div>
       ) : (
-        <p className="text-[hsl(var(--muted-foreground))] text-sm">Add contact content in Sanity Studio.</p>
+        <p className="font-eczar text-[hsl(var(--muted-foreground))] text-xs">Add contact content in Sanity Studio.</p>
       )}
     </div>
   );

@@ -37,11 +37,11 @@ export default function HomeHero({ heroImageUrl, heroImageMargin, intro, siteTit
       ) : null}
       <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
         {intro && Array.isArray(intro) && (intro as unknown[]).length > 0 ? (
-          <div className="font-serif-editorial text-[15px] leading-relaxed text-[hsl(var(--foreground))] prose prose-p:mb-3">
+          <div className="font-eczar text-[13px] leading-relaxed text-[hsl(var(--foreground))] prose prose-p:mb-3">
             <PortableText value={intro as object} />
           </div>
         ) : (
-          <p className="font-serif-editorial text-[15px] leading-relaxed text-[hsl(var(--muted-foreground))]">
+          <p className="font-eczar text-[13px] leading-relaxed text-[hsl(var(--muted-foreground))]">
             Welcome to {siteTitle}. Add intro content in Sanity Studio (Home document).
           </p>
         )}

@@ -18,20 +18,31 @@ export default function Footer({ seriesList }: FooterProps) {
 
   return (
     <footer className="border-t border-[hsl(var(--border))] bg-[hsl(var(--background))] px-4 py-3 sm:px-6">
-      <p className="text-[hsl(var(--muted-foreground))] text-xs">
-        {links.length > 0 ? (
-          links.map((l, i) => (
-            <span key={l.href}>
-              {i > 0 && " · "}
-              <Link href={l.href} className="hover:text-[hsl(var(--foreground))] underline underline-offset-2">
-                {l.label}
-              </Link>
-            </span>
-          ))
-        ) : (
-          <span>© Showcase</span>
+      <div className="flex flex-col gap-1 text-[hsl(var(--muted-foreground))] text-xs">
+        {links.length > 0 && (
+          <span>
+            {links.map((l, i) => (
+              <span key={l.href}>
+                {i > 0 && " · "}
+                <Link href={l.href} className="hover:text-[hsl(var(--foreground))] underline underline-offset-2">
+                  {l.label}
+                </Link>
+              </span>
+            ))}
+          </span>
         )}
-      </p>
+        <span>
+          Links:{" "}
+          <a
+            href="https://www.instagram.com/omrgr_/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[hsl(var(--foreground))] underline underline-offset-2"
+          >
+            Instagram
+          </a>
+        </span>
+      </div>
     </footer>
   );
 }

@@ -16,7 +16,7 @@ export async function generateStaticParams() {
 const infoPageComponents: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
-      <p className="text-sm leading-relaxed text-justify text-[hsl(var(--foreground))] mb-5 last:mb-0">
+      <p className="font-eczar text-xs leading-relaxed text-justify text-[hsl(var(--foreground))] mb-5 last:mb-0">
         {children}
       </p>
     ),
@@ -31,16 +31,16 @@ export default async function InfoPage({ params }: PageProps) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       {slug !== "about" && slug !== "press" && (
-        <h1 className="font-serif-editorial text-2xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
+        <h1 className="font-eczar text-xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
           {page.title}
         </h1>
       )}
       {page.body && Array.isArray(page.body) && (page.body as unknown[]).length > 0 ? (
-        <div className="font-serif-editorial">
+        <div className="font-eczar">
           <PortableText value={page.body as object} components={infoPageComponents} />
         </div>
       ) : (
-        <p className="text-[hsl(var(--muted-foreground))] text-sm">No content yet.</p>
+        <p className="font-eczar text-[hsl(var(--muted-foreground))] text-xs">No content yet.</p>
       )}
     </div>
   );
