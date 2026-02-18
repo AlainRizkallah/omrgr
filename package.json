@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "populate-galleries": "node scripts/populate-galleries-from-pictures.js",
     "build": "next build",
     "build:fast": "next build --no-lint",
     "build:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next build",
