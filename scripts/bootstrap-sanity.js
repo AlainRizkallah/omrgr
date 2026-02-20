@@ -95,6 +95,7 @@ function main() {
             _type: "siteSettings",
             _id: "siteSettings",
             title: "Showcase",
+            fontFamily: "eczar",
           },
         },
       ]);

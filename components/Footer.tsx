@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-[hsl(var(--background))] px-4 py-6 sm:px-6 font-eczar">
+    <footer className="bg-[hsl(var(--background))] px-4 py-6 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-6 text-[hsl(var(--muted-foreground))]">
         {/* Left: brand + address */}
         <div className="flex flex-col gap-1">

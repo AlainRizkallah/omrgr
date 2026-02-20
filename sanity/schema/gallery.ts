@@ -1,14 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { GalleryLayoutBlockTextInput } from "../components/GalleryLayoutBlockTextInput";
 
-/** Font choice for layout block text (matches site UI). Use a plain array so Sanity Studio shows all options. */
-const LAYOUT_BLOCK_FONT_OPTIONS: { value: string; title: string }[] = [
-  { value: "serif", title: "Serif (editorial)" },
-  { value: "sans", title: "Sans" },
-  { value: "eczar", title: "Eczar" },
-  { value: "hal-timezone", title: "HAL Timezone" },
-];
-
 /** Text size for layout block (matches site UI) */
 const LAYOUT_BLOCK_TEXT_SIZE_OPTIONS = [
   { value: "sm", title: "Small" },
@@ -16,12 +8,6 @@ const LAYOUT_BLOCK_TEXT_SIZE_OPTIONS = [
   { value: "lg", title: "Large" },
 ] as const;
 
-const FONT_LABELS: Record<string, string> = {
-  serif: "Serif",
-  sans: "Sans",
-  eczar: "Eczar",
-  "hal-timezone": "HAL Timezone",
-};
 const TEXT_SIZE_LABELS: Record<string, string> = { sm: "Small", base: "Base", lg: "Large" };
 
 /** Text block for gallery custom layout (appears above All Media grid) */
@@ -30,18 +16,6 @@ export const galleryLayoutBlockTextType = defineType({
   title: "Text block",
   type: "object",
   fields: [
-    defineField({
-      name: "font",
-      type: "string",
-      title: "Font",
-      description: "Font used on the gallery page.",
-      options: {
-        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
-        layout: "radio",
-        direction: "horizontal",
-      },
-      initialValue: "serif",
-    }),
     defineField({
       name: "textSize",
       type: "string",
@@ -63,13 +37,12 @@ export const galleryLayoutBlockTextType = defineType({
     }),
   ],
   preview: {
-    select: { font: "font", textSize: "textSize" },
-    prepare({ font, textSize }) {
-      const fontLabel = FONT_LABELS[font] ?? "Serif";
+    select: { textSize: "textSize" },
+    prepare({ textSize }) {
       const sizeLabel = TEXT_SIZE_LABELS[textSize] ?? "Base";
       return {
         title: "Text block",
-        subtitle: `${fontLabel}, ${sizeLabel}`,
+        subtitle: sizeLabel,
       };
     },
   },
@@ -94,18 +67,6 @@ export const galleryLayoutBlockImageType = defineType({
       type: "string",
       title: "Caption",
       description: "Optional short caption (e.g. for accessibility and figcaption).",
-    }),
-    defineField({
-      name: "textBelowFont",
-      type: "string",
-      title: "Font (text below)",
-      description: "Font for the optional text block below the image.",
-      options: {
-        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
-        layout: "radio",
-        direction: "horizontal",
-      },
-      initialValue: "serif",
     }),
     defineField({
       name: "textBelowTextSize",
@@ -174,17 +135,6 @@ export const galleryLayoutBlockRowType = defineType({
       },
     }),
     defineField({
-      name: "font",
-      type: "string",
-      title: "Font (text side)",
-      options: {
-        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
-        layout: "radio",
-        direction: "horizontal",
-      },
-      initialValue: "serif",
-    }),
-    defineField({
       name: "textSize",
       type: "string",
       title: "Text size (text side)",
@@ -213,17 +163,6 @@ export const galleryLayoutBlockRowType = defineType({
       type: "string",
       title: "Image caption",
       description: "Optional short caption for the image.",
-    }),
-    defineField({
-      name: "textBelowFont",
-      type: "string",
-      title: "Font (text below image)",
-      options: {
-        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
-        layout: "radio",
-        direction: "horizontal",
-      },
-      initialValue: "serif",
     }),
     defineField({
       name: "textBelowTextSize",
@@ -259,17 +198,6 @@ export const galleryGridCellTextType = defineType({
   title: "Text",
   type: "object",
   fields: [
-    defineField({
-      name: "font",
-      type: "string",
-      title: "Font",
-      options: {
-        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
-        layout: "radio",
-        direction: "horizontal",
-      },
-      initialValue: "serif",
-    }),
     defineField({
       name: "textSize",
       type: "string",
@@ -311,17 +239,6 @@ export const galleryGridCellImageType = defineType({
       type: "string",
       title: "Caption",
       description: "Optional short caption for the image.",
-    }),
-    defineField({
-      name: "textBelowFont",
-      type: "string",
-      title: "Font (text below)",
-      options: {
-        list: [...LAYOUT_BLOCK_FONT_OPTIONS],
-        layout: "radio",
-        direction: "horizontal",
-      },
-      initialValue: "serif",
     }),
     defineField({
       name: "textBelowTextSize",

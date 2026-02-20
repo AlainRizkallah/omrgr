@@ -18,7 +18,7 @@ function infoPageComponents(slug: string): PortableTextComponents {
   return {
     block: {
       normal: ({ children }) => (
-        <p className={`font-eczar text-xs leading-relaxed${justifyClass} text-[hsl(var(--foreground))] mb-5 last:mb-0`}>
+        <p className={`text-xs leading-relaxed${justifyClass} text-[hsl(var(--foreground))] mb-5 last:mb-0`}>
           {children}
         </p>
       ),
@@ -34,16 +34,16 @@ export default async function InfoPage({ params }: PageProps) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       {slug !== "about" && slug !== "press" && (
-        <h1 className="font-eczar text-xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
+        <h1 className="text-xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
           {page.title}
         </h1>
       )}
       {page.body && Array.isArray(page.body) && (page.body as unknown[]).length > 0 ? (
-        <div className="font-eczar">
+        <div>
           <PortableText value={page.body as object} components={infoPageComponents(slug)} />
         </div>
       ) : (
-        <p className="font-eczar text-[hsl(var(--muted-foreground))] text-xs">No content yet.</p>
+        <p className="text-[hsl(var(--muted-foreground))] text-xs">No content yet.</p>
       )}
     </div>
   );

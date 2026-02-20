@@ -48,20 +48,6 @@ function GalleryImage({
   );
 }
 
-/** Tailwind classes for layout block font (matches Sanity options) */
-function layoutBlockFontClass(font?: string): string {
-  switch (font) {
-    case "sans":
-      return "font-sans";
-    case "eczar":
-      return "font-eczar";
-    case "hal-timezone":
-      return "font-hal-timezone";
-    default:
-      return "font-serif-editorial";
-  }
-}
-
 /** Tailwind text size scale for layout blocks (matches Sanity textSize) */
 const SIZE_SCALE = {
   xs: { block: "text-xs", h1: "text-lg", h2: "text-base", h3: "text-sm", h4: "text-xs", blockquote: "text-xs border-l-2 border-muted-foreground/30 pl-4 italic" },
@@ -153,13 +139,12 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
           <div className="mx-auto space-y-32">
             {blocks.map((block, i) => {
               if (block.type === "galleryLayoutBlockText" && block.body && Array.isArray(block.body) && block.body.length > 0) {
-                const fontClass = layoutBlockFontClass(block.font);
                 const sizeKey = layoutBlockTextSizeClass(block.textSize);
                 const components = galleryLayoutBlockComponents(sizeKey);
                 return (
                   <div key={i} className="mx-auto max-w-6xl px-10 sm:px-16 md:px-24">
                     <div
-                      className={`${fontClass} ${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                      className={`${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
                     >
                       <PortableText value={(block.body ?? []) as React.ComponentProps<typeof PortableText>["value"]} components={components} />
                     </div>
@@ -167,7 +152,6 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                 );
               }
               if (block.type === "galleryLayoutBlockImage" && block.src) {
-                const textBelowFontClass = layoutBlockFontClass(block.textBelow?.font);
                 const textBelowSizeKey = layoutBlockTextSizeClass(block.textBelow?.textSize);
                 const textBelowSizeKeySmall = smallerSizeForTextImageBlock(textBelowSizeKey);
                 const textBelowComponents = galleryLayoutBlockComponents(textBelowSizeKeySmall, { justify: false });
@@ -191,7 +175,7 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                   </figure>
                     {block.textBelow?.body && Array.isArray(block.textBelow.body) && block.textBelow.body.length > 0 ? (
                       <div
-                        className={`px-4 sm:px-0 ${textBelowFontClass} ${SIZE_SCALE[textBelowSizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                        className={`px-4 sm:px-0 ${SIZE_SCALE[textBelowSizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
                       >
                         <PortableText
                           value={block.textBelow.body as React.ComponentProps<typeof PortableText>["value"]}
@@ -203,7 +187,6 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                 );
               }
               if (block.type === "galleryLayoutBlockRow" && block.src) {
-                const fontClass = layoutBlockFontClass(block.font);
                 const sizeKey = layoutBlockTextSizeClass(block.textSize);
                 const sizeKeySmall = smallerSizeForTextImageBlock(sizeKey);
                 const components = galleryLayoutBlockComponents(sizeKeySmall, { justify: false });
@@ -213,7 +196,7 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                 const textCell = (
                   <div className={`${textOrderClass} min-w-0 px-4 sm:px-0`}>
                     {block.body && Array.isArray(block.body) && block.body.length > 0 ? (
-                      <div className={`${fontClass} ${SIZE_SCALE[sizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}>
+                      <div className={`${SIZE_SCALE[sizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}>
                         <PortableText value={(block.body ?? []) as React.ComponentProps<typeof PortableText>["value"]} components={components} />
                       </div>
                     ) : (
@@ -221,7 +204,6 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                     )}
                   </div>
                 );
-                const imageTextBelowFontClass = layoutBlockFontClass(block.textBelow?.font);
                 const imageTextBelowSizeKey = layoutBlockTextSizeClass(block.textBelow?.textSize);
                 const imageTextBelowSizeKeySmall = smallerSizeForTextImageBlock(imageTextBelowSizeKey);
                 const imageTextBelowComponents = galleryLayoutBlockComponents(imageTextBelowSizeKeySmall, { justify: false });
@@ -245,7 +227,7 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                     </figure>
                     {block.textBelow?.body && Array.isArray(block.textBelow.body) && block.textBelow.body.length > 0 ? (
                       <div
-                        className={`px-4 sm:px-0 ${imageTextBelowFontClass} ${SIZE_SCALE[imageTextBelowSizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                        className={`px-4 sm:px-0 ${SIZE_SCALE[imageTextBelowSizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
                       >
                         <PortableText
                           value={block.textBelow.body as React.ComponentProps<typeof PortableText>["value"]}
@@ -283,7 +265,6 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                     >
                       {block.items.map((cell: GalleryGridCell, j: number) => {
                         if (cell.type === "galleryGridCellText") {
-                          const fontClass = layoutBlockFontClass(cell.font);
                           const sizeKey = layoutBlockTextSizeClass(cell.textSize);
                           const sizeKeySmall = smallerSizeForTextImageBlock(sizeKey);
                           const components = galleryLayoutBlockComponents(sizeKeySmall, { justify: false });
@@ -291,7 +272,7 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                             <div key={j} className="min-w-0 px-4 sm:px-0">
                               {cell.body && Array.isArray(cell.body) && cell.body.length > 0 ? (
                                 <div
-                                  className={`${fontClass} ${SIZE_SCALE[sizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                                  className={`${SIZE_SCALE[sizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
                                 >
                                   <PortableText
                                     value={(cell.body ?? []) as React.ComponentProps<typeof PortableText>["value"]}
@@ -305,7 +286,6 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                           );
                         }
                         if (cell.type === "galleryGridCellImage" && cell.src) {
-                          const cellTextBelowFontClass = layoutBlockFontClass(cell.textBelow?.font);
                           const cellTextBelowSizeKey = layoutBlockTextSizeClass(cell.textBelow?.textSize);
                           const cellTextBelowSizeKeySmall = smallerSizeForTextImageBlock(cellTextBelowSizeKey);
                           const cellTextBelowComponents = galleryLayoutBlockComponents(cellTextBelowSizeKeySmall, { justify: false });
@@ -329,7 +309,7 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
                               </figure>
                               {cell.textBelow?.body && Array.isArray(cell.textBelow.body) && cell.textBelow.body.length > 0 ? (
                                 <div
-                                  className={`px-4 sm:px-0 ${cellTextBelowFontClass} ${SIZE_SCALE[cellTextBelowSizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                                  className={`px-4 sm:px-0 ${SIZE_SCALE[cellTextBelowSizeKeySmall].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
                                 >
                                   <PortableText
                                     value={cell.textBelow.body as React.ComponentProps<typeof PortableText>["value"]}

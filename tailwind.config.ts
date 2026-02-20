@@ -20,6 +20,7 @@ const config: Config = {
       fontFamily: {
         serif: ["Georgia", "Cambria", "Times New Roman", "Times", "serif"],
         "serif-editorial": ["Georgia", "Times New Roman", "serif"],
+        corbert: ["Corbert", "sans-serif"],
         eczar: ["Eczar", "Georgia", "serif"],
         "hal-timezone": ["HALTimezone-Regular", "sans-serif"],
       },

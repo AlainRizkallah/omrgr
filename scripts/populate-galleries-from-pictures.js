@@ -206,7 +206,6 @@ async function main() {
       layoutBlocks.push({
         _type: "galleryLayoutBlockText",
         _key: "intro-" + cfg.key,
-        font: "eczar",
         textSize: "sm",
         body: portableText(introText),
       });
@@ -230,7 +229,6 @@ async function main() {
         _key: "row-" + cfg.key + "-" + i + "-" + Date.now(),
         layout: "textLeft",
         mobileOrder: "textFirst",
-        font: "eczar",
         textSize: "sm",
         body: rowBody,
         image: { _type: "image", asset: { _type: "reference", _ref: assetId } },

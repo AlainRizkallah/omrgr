@@ -22,14 +22,13 @@ export interface SeriesLink {
 
 /** Optional rich text block below an image (same formatting as text blocks) */
 export interface ImageTextBelow {
-  font?: string;
   textSize?: string;
   body: unknown;
 }
 
 /** Cell inside a Grid layout block */
 export type GalleryGridCell =
-  | { type: "galleryGridCellText"; body: unknown; font?: string; textSize?: string }
+  | { type: "galleryGridCellText"; body: unknown; textSize?: string }
   | {
       type: "galleryGridCellImage";
       src: string;
@@ -42,7 +41,7 @@ export type GalleryGridCell =
 
 /** Layout block for gallery page (custom content above All Media grid) */
 export type GalleryLayoutBlock =
-  | { type: "galleryLayoutBlockText"; body: unknown; font?: string; textSize?: string }
+  | { type: "galleryLayoutBlockText"; body: unknown; textSize?: string }
   | {
       type: "galleryLayoutBlockImage";
       src: string;
@@ -57,7 +56,6 @@ export type GalleryLayoutBlock =
       layout: "textLeft" | "imageLeft";
       mobileOrder?: "textFirst" | "imageFirst";
       body: unknown;
-      font?: string;
       textSize?: string;
       src: string;
       alt: string;
@@ -97,4 +95,5 @@ export interface HomeData {
   heroImageMargin: HeroImageMargin;
   intro: unknown;
   siteTitle: string;
+  siteFont: string;
 }

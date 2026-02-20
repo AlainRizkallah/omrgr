@@ -24,7 +24,6 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
     _type == "galleryLayoutBlockText" => {
       "_type": _type,
       "body": body,
-      font,
       textSize
     },
     _type == "galleryLayoutBlockImage" => {
@@ -32,7 +31,6 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
       "imageRef": image.asset._ref,
       "imageAsset": image.asset->,
       caption,
-      textBelowFont,
       textBelowTextSize,
       "textBelowBody": textBelowBody
     },
@@ -41,12 +39,10 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
       layout,
       mobileOrder,
       "body": body,
-      font,
       textSize,
       "imageRef": image.asset._ref,
       "imageAsset": image.asset->,
       caption,
-      textBelowFont,
       textBelowTextSize,
       "textBelowBody": textBelowBody
     },
@@ -58,14 +54,12 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
         _key,
         _type == "galleryGridCellText" => {
           "body": body,
-          font,
           textSize
         },
         _type == "galleryGridCellImage" => {
           "imageRef": image.asset._ref,
           "imageAsset": image.asset->,
           caption,
-          textBelowFont,
           textBelowTextSize,
           "textBelowBody": textBelowBody
         }
@@ -101,6 +95,7 @@ export const homeQuery = `*[_type == "home"][0] {
 
 /** GROQ: site settings */
 export const siteSettingsQuery = `*[_type == "siteSettings"][0] {
-  title
+  title,
+  fontFamily
 }`;
 

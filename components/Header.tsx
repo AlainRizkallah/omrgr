@@ -50,7 +50,7 @@ export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderPr
   return (
     <header className="sticky top-0 z-50 bg-[hsl(var(--background))]/95 backdrop-blur">
       <div className="mx-auto flex h-14 min-h-[44px] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <nav className="font-eczar flex items-center gap-3 text-xs tracking-wide sm:gap-5" aria-label="Main">
+        <nav className="flex items-center gap-3 text-xs tracking-wide sm:gap-5" aria-label="Main">
             <div className="relative">
               <button
                 type="button"
@@ -184,7 +184,7 @@ export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderPr
 
         <Link
           href="/"
-          className="relative shrink-0 font-serif-editorial text-base font-normal text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg"
+          className="relative shrink-0 text-base font-normal text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg"
         >
           {siteTitle || "OMRGR"}
           <span className="absolute -top-0.5 -right-1 text-[0.5em] leading-none opacity-70" aria-hidden>®</span>

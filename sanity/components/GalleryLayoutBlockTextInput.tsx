@@ -3,12 +3,7 @@ import { Stack, Card, Text } from "@sanity/ui";
 import { PortableText } from "@portabletext/react";
 import type { ObjectInputProps } from "sanity";
 
-const FONT_STYLES: Record<string, string> = {
-  serif: "Georgia, 'Times New Roman', serif",
-  sans: "system-ui, -apple-system, sans-serif",
-  eczar: "'Eczar', Georgia, serif",
-  "hal-timezone": "'HALTimezone-Regular', sans-serif",
-};
+const PREVIEW_FONT = "Georgia, 'Times New Roman', serif";
 
 const FONT_SIZES: Record<string, string> = {
   sm: "14px",
@@ -42,14 +37,13 @@ const PT_BLOCK = {
 };
 
 export function GalleryLayoutBlockTextInput(props: ObjectInputProps) {
-  const value = props.value as { font?: string; textSize?: string; body?: unknown } | undefined;
-  const font = value?.font ?? "serif";
+  const value = props.value as { textSize?: string; body?: unknown } | undefined;
   const textSize = value?.textSize ?? "base";
   const body = value?.body;
   const hasBody = Array.isArray(body) && body.length > 0;
 
   const previewStyle: React.CSSProperties = {
-    fontFamily: FONT_STYLES[font] ?? FONT_STYLES.serif,
+    fontFamily: PREVIEW_FONT,
     fontSize: FONT_SIZES[textSize] ?? FONT_SIZES.base,
     lineHeight: 1.6,
   };
@@ -60,7 +54,7 @@ export function GalleryLayoutBlockTextInput(props: ObjectInputProps) {
       <Card padding={3} radius={2} shadow={1} tone="transparent" border>
         <Stack space={3}>
           <Text size={1} weight="semibold" muted>
-            Site preview (font &amp; size)
+            Site preview (size)
           </Text>
           {hasBody ? (
             <div style={previewStyle}>

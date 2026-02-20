@@ -20,7 +20,6 @@ interface GalleryFetchResult {
     _type: string
     _key?: string
     body?: unknown
-    font?: string
     textSize?: string
     layout?: string
     mobileOrder?: string
@@ -29,19 +28,16 @@ interface GalleryFetchResult {
       _type: string
       _key?: string
       body?: unknown
-      font?: string
       textSize?: string
       imageRef?: string
       imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
       caption?: string
-      textBelowFont?: string
       textBelowTextSize?: string
       textBelowBody?: unknown
     }>
     imageRef?: string
     imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
     caption?: string
-    textBelowFont?: string
     textBelowTextSize?: string
     textBelowBody?: unknown
   }>
@@ -86,7 +82,6 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
         return {
           type: "galleryLayoutBlockText",
           body: b.body ?? [],
-          font: b.font ?? "serif",
           textSize: b.textSize ?? "base",
         };
       }
@@ -104,7 +99,6 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
           textBelow:
             b.textBelowBody && Array.isArray(b.textBelowBody) && b.textBelowBody.length > 0
               ? {
-                  font: b.textBelowFont ?? "serif",
                   textSize: b.textBelowTextSize ?? "base",
                   body: b.textBelowBody,
                 }
@@ -125,7 +119,6 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
           layout,
           mobileOrder: b.mobileOrder === "imageFirst" ? "imageFirst" : b.mobileOrder === "textFirst" ? "textFirst" : undefined,
           body: b.body ?? [],
-          font: b.font ?? "serif",
           textSize: b.textSize ?? "base",
           src,
           alt: b.caption ?? "",
@@ -133,7 +126,6 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
           textBelow:
             b.textBelowBody && Array.isArray(b.textBelowBody) && b.textBelowBody.length > 0
               ? {
-                  font: b.textBelowFont ?? "serif",
                   textSize: b.textBelowTextSize ?? "base",
                   body: b.textBelowBody,
                 }
@@ -152,7 +144,6 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
               return {
                 type: "galleryGridCellText" as const,
                 body: it.body ?? [],
-                font: it.font ?? "serif",
                 textSize: it.textSize ?? "base",
               };
             }
@@ -170,7 +161,6 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
                 textBelow:
                   it.textBelowBody && Array.isArray(it.textBelowBody) && it.textBelowBody.length > 0
                     ? {
-                        font: it.textBelowFont ?? "serif",
                         textSize: it.textBelowTextSize ?? "base",
                         body: it.textBelowBody,
                       }
@@ -256,14 +246,17 @@ export async function getContact(): Promise<ContactData | null> {
 
 export async function getHome(): Promise<HomeData> {
   if (!isSanityConfigured()) {
-    return { heroImageUrl: null, heroImageMargin: "medium", intro: null, siteTitle: "OMRGR" };
+    return { heroImageUrl: null, heroImageMargin: "medium", intro: null, siteTitle: "OMRGR", siteFont: "eczar" };
   }
   const [home, settings] = await Promise.all([
     client.fetch<{ heroImageRef?: string; heroImageMargin?: string; intro?: unknown } | null>(homeQuery),
-    client.fetch<{ title?: string } | null>(siteSettingsQuery),
+    client.fetch<{ title?: string; fontFamily?: string } | null>(siteSettingsQuery),
   ]);
   const raw = settings?.title?.trim();
   const siteTitle = raw && raw !== "Showcase" ? raw : "OMRGR";
+  const siteFont = settings?.fontFamily?.trim() && ["corbert", "eczar", "serif", "sans", "hal-timezone"].includes(settings.fontFamily.trim())
+    ? settings.fontFamily.trim()
+    : "eczar";
   let heroImageUrl: string | null = null;
   if (home?.heroImageRef) {
     heroImageUrl = urlFor({ _ref: home.heroImageRef }).width(1920).height(1080).url();
@@ -277,5 +270,6 @@ export async function getHome(): Promise<HomeData> {
     heroImageMargin,
     intro: home?.intro ?? null,
     siteTitle,
+    siteFont,
   };
 }
