@@ -41,7 +41,6 @@ export default async function WorksGalleryPage({ params }: PageProps) {
         hideSeriesInTitle={gallery.isSingleGalleryInSeries}
         layoutBlocks={gallery.layoutBlocks}
         photos={gallery.photos}
-        otherGalleries={gallery.otherGalleries}
       />
     </div>
   );

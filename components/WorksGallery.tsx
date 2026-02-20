@@ -116,8 +116,6 @@ function galleryLayoutBlockComponents(textSize: keyof typeof SIZE_SCALE, options
   };
 }
 
-type OtherGallery = { slug: string; title: string; seriesSlug: string };
-
 interface WorksGalleryProps {
   title: string;
   seriesTitle: string;
@@ -125,10 +123,9 @@ interface WorksGalleryProps {
   hideSeriesInTitle?: boolean;
   layoutBlocks?: GalleryLayoutBlock[];
   photos: PhotoItem[];
-  otherGalleries: OtherGallery[];
 }
 
-export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, layoutBlocks, photos, otherGalleries }: WorksGalleryProps) {
+export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, layoutBlocks, photos }: WorksGalleryProps) {
   const blocks = layoutBlocks ?? [];
   const hasLayoutBlocks = blocks.length > 0;
   const hasPhotos = photos.length > 0;
@@ -352,24 +349,6 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
               return null;
             })}
           </div>
-        </section>
-      )}
-
-      {otherGalleries.length > 0 && (
-        <section className="shrink-0 px-4 py-3 sm:px-6">
-          <p className="text-[hsl(var(--muted-foreground))] text-xs">
-            {otherGalleries.map((g, i) => (
-              <span key={`${g.seriesSlug}-${g.slug}`}>
-                {i > 0 && " · "}
-                <Link
-                  href={`/works/${g.seriesSlug}/${g.slug}`}
-                  className="hover:text-[hsl(var(--foreground))] underline underline-offset-2"
-                >
-                  {g.title}
-                </Link>
-              </span>
-            ))}
-          </p>
         </section>
       )}
     </div>
