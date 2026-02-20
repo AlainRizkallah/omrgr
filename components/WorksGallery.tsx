@@ -141,7 +141,7 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
 
   if (!hasLayoutBlocks && !hasPhotos) {
     return (
-      <div className="flex min-h-[50vh] flex-col items-center justify-center px-4">
+      <div className="mt-0 sm:mt-12 flex min-h-[50vh] flex-col items-center justify-center px-4">
         <p className="text-[hsl(var(--muted-foreground))] text-sm">No content in this gallery yet.</p>
         <p className="mt-2 text-[hsl(var(--muted-foreground))] text-xs">Add layout blocks or images in Sanity Studio.</p>
       </div>
@@ -149,7 +149,7 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
   }
 
   return (
-    <div className="flex min-h-full flex-1 flex-col">
+    <div className="mt-0 sm:mt-12 flex min-h-full flex-1 flex-col">
       {/* Custom layout blocks (text and images) */}
       {hasLayoutBlocks && (
         <section className="shrink-0 overflow-x-hidden px-4 py-6 sm:px-6">
