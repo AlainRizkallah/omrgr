@@ -11,14 +11,10 @@ type SeriesItem = { slug: string; title: string; galleries: GalleryItem[] };
 interface HeaderProps {
   seriesList: SeriesItem[];
   siteTitle: string;
+  infoNavLinks: Array<{ href: string; label: string }>;
 }
 
-const NAV_LINKS = [
-  { href: "/info/about", label: "About" },
-  { href: "/info/press", label: "Press" },
-] as const;
-
-export default function Header({ seriesList, siteTitle }: HeaderProps) {
+export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderProps) {
   const [worksOpen, setWorksOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [openSeriesSlug, setOpenSeriesSlug] = useState<string | null>(null);
@@ -167,7 +163,7 @@ export default function Header({ seriesList, siteTitle }: HeaderProps) {
                 <>
                   <div className="fixed inset-0 z-10" aria-hidden onClick={handleInfoBackdropClick} />
                   <div className="absolute left-0 top-full z-20 mt-1.5 min-w-[160px] bg-[hsl(var(--background))] py-1.5 shadow-xl">
-                    {NAV_LINKS.map((link) => (
+                    {infoNavLinks.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}

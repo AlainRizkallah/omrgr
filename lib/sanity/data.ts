@@ -230,6 +230,24 @@ export async function getInfoPageSlugs(): Promise<string[]> {
   return slugs || [];
 }
 
+/** Nav links for Info menu: href + label from Sanity info page titles (about, press). */
+export async function getInfoNavLinks(): Promise<Array<{ href: string; label: string }>> {
+  if (!isSanityConfigured()) {
+    return [
+      { href: "/info/about", label: "About" },
+      { href: "/info/press", label: "Press" },
+    ];
+  }
+  const [about, press] = await Promise.all([
+    client.fetch<{ title?: string } | null>(infoPageBySlugQuery, { slug: "about" }),
+    client.fetch<{ title?: string } | null>(infoPageBySlugQuery, { slug: "press" }),
+  ]);
+  return [
+    { href: "/info/about", label: about?.title?.trim() || "About" },
+    { href: "/info/press", label: press?.title?.trim() || "Press" },
+  ];
+}
+
 export async function getContact(): Promise<ContactData | null> {
   if (!isSanityConfigured()) return null;
   const doc = await client.fetch<{ body: unknown } | null>(contactQuery);
