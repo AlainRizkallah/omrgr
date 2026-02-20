@@ -13,15 +13,18 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-const infoPageComponents: PortableTextComponents = {
-  block: {
-    normal: ({ children }) => (
-      <p className="font-eczar text-xs leading-relaxed text-justify text-[hsl(var(--foreground))] mb-5 last:mb-0">
-        {children}
-      </p>
-    ),
-  },
-};
+function infoPageComponents(slug: string): PortableTextComponents {
+  const justifyClass = slug === "about" ? "" : " text-justify";
+  return {
+    block: {
+      normal: ({ children }) => (
+        <p className={`font-eczar text-xs leading-relaxed${justifyClass} text-[hsl(var(--foreground))] mb-5 last:mb-0`}>
+          {children}
+        </p>
+      ),
+    },
+  };
+}
 
 export default async function InfoPage({ params }: PageProps) {
   const { slug } = await params;
@@ -37,7 +40,7 @@ export default async function InfoPage({ params }: PageProps) {
       )}
       {page.body && Array.isArray(page.body) && (page.body as unknown[]).length > 0 ? (
         <div className="font-eczar">
-          <PortableText value={page.body as object} components={infoPageComponents} />
+          <PortableText value={page.body as object} components={infoPageComponents(slug)} />
         </div>
       ) : (
         <p className="font-eczar text-[hsl(var(--muted-foreground))] text-xs">No content yet.</p>
