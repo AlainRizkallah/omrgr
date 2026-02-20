@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useRef } from "react";
+import { corbertFont } from "@/lib/fonts";
 
 const BACKDROP_IGNORE_MS = 400;
 
@@ -184,7 +185,7 @@ export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderPr
 
         <Link
           href="/"
-          className="relative shrink-0 text-base font-normal text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg"
+          className={`relative shrink-0 text-base font-[950] text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg ${corbertFont.className}`}
         >
           {siteTitle || "OMRGR"}
           <span className="absolute -top-0.5 -right-1 text-[0.5em] leading-none opacity-70" aria-hidden>®</span>

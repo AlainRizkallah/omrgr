@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Eczar (Google Font) */
-@import url("https://fonts.googleapis.com/css2?family=Eczar:wght@400;500;600;700&display=swap");
+/* Eczar and Corbert are loaded via next/font in root layout for optimized loading */
 
 :root {
   /* Slightly warm off-white / beige, still reads as white */
@@ -19,50 +18,6 @@
   body {
     @apply h-full w-full m-0 p-0 antialiased bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
   }
-}
-
-/* Corbert (from Corbert-Trial; files in public/fonts/) */
-@font-face {
-  font-family: "Corbert";
-  src: url("/fonts/Corbert-Light.otf") format("opentype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Corbert";
-  src: url("/fonts/Corbert-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Corbert";
-  src: url("/fonts/Corbert-RegularItalic.otf") format("opentype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Corbert";
-  src: url("/fonts/Corbert-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Corbert";
-  src: url("/fonts/Corbert-Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Corbert";
-  src: url("/fonts/Corbert-BoldItalic.otf") format("opentype");
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
 }
 
 /* HAL Timezone: add your font file to public/fonts/ and uncomment or adjust the path */
