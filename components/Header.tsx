@@ -187,7 +187,7 @@ export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderPr
           href="/"
           className={`relative shrink-0 text-base font-[950] text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg ${corbertFont.className}`}
         >
-          {siteTitle || "OMRGR"}
+          <span className="[-webkit-text-stroke:0.04em_currentColor]">{siteTitle || "OMRGR"}</span>
           <span className="absolute -top-0.5 -right-1 text-[0.5em] leading-none opacity-70" aria-hidden>®</span>
         </Link>
       </div>
