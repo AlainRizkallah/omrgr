@@ -25,7 +25,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const gallery = await getGalleryBySlugs(seriesSlug, gallerySlug);
   if (!gallery) return { title: "Works" };
   const title = gallery.isSingleGalleryInSeries ? gallery.title : `${gallery.seriesTitle} — ${gallery.title}`;
-  return { title };
+  const description = `OMRGR — ${gallery.seriesTitle}: ${gallery.title}. Portfolio gallery.`;
+  const firstImage = gallery.photos?.[0]?.src;
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      ...(firstImage && { images: [{ url: firstImage, width: 1200, height: 630, alt: gallery.title }] }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(firstImage && { images: [firstImage] }),
+    },
+  };
 }
 
 export default async function WorksGalleryPage({ params }: PageProps) {

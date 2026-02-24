@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useRef } from "react";
 import { corbertFont } from "@/lib/fonts";
 
@@ -16,6 +17,8 @@ interface HeaderProps {
 }
 
 export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderProps) {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [worksOpen, setWorksOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [openSeriesSlug, setOpenSeriesSlug] = useState<string | null>(null);
@@ -187,8 +190,17 @@ export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderPr
           href="/"
           className={`relative shrink-0 text-base font-[950] text-[hsl(var(--foreground))] hover:opacity-80 sm:text-lg ${corbertFont.className}`}
         >
-          <span className="[-webkit-text-stroke:0.04em_currentColor]">{siteTitle || "OMRGR"}</span>
-          <span className="absolute -top-0.5 -right-1 text-[0.5em] leading-none opacity-70" aria-hidden>®</span>
+          {isHome ? (
+            <h1 className="m-0 text-inherit font-inherit">
+              <span className="[-webkit-text-stroke:0.04em_currentColor]">{siteTitle || "OMRGR"}</span>
+              <span className="absolute -top-0.5 -right-1 text-[0.5em] leading-none opacity-70" aria-hidden>®</span>
+            </h1>
+          ) : (
+            <>
+              <span className="[-webkit-text-stroke:0.04em_currentColor]">{siteTitle || "OMRGR"}</span>
+              <span className="absolute -top-0.5 -right-1 text-[0.5em] leading-none opacity-70" aria-hidden>®</span>
+            </>
+          )}
         </Link>
       </div>
     </header>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getInfoPageBySlug, getInfoPageSlugs } from "@/lib/sanity/data";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
@@ -8,9 +9,28 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+function textFromPortableBody(body: unknown): string {
+  if (!Array.isArray(body) || body.length === 0) return "";
+  const block = body[0] as { children?: Array<{ text?: string }> };
+  const text = (block.children || []).map((c) => c.text ?? "").join("").trim();
+  return text.slice(0, 150);
+}
+
 export async function generateStaticParams() {
   const slugs = await getInfoPageSlugs();
   return slugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const page = await getInfoPageBySlug(slug);
+  if (!page) return {};
+  const title = `${page.title} | OMRGR`;
+  const fromBody = textFromPortableBody(page.body);
+  const description = fromBody
+    ? `${fromBody}${fromBody.length >= 150 ? "…" : ""}`
+    : `OMRGR — ${page.title}. About the studio.`;
+  return { title, description };
 }
 
 function infoPageComponents(slug: string): PortableTextComponents {

@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { getContact } from "@/lib/sanity/data";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Contact OMRGR. Get in touch for collaborations and inquiries.",
+};
 
 const contactBlockClass =
   "text-xs leading-relaxed text-justify text-[hsl(var(--foreground))]";

@@ -33,6 +33,7 @@ NEXT_PUBLIC_SANITY_DATASET=production
 
 Optional:
 
+- `NEXT_PUBLIC_SITE_URL` — Canonical base URL for SEO (sitemap, robots.txt, Open Graph). Defaults to `https://omrgr.co` if unset.
 - `SANITY_API_TOKEN` — Editor token (for the bootstrap script and optional server-side write).
 - `REVALIDATION_SECRET` — Secret for the on-demand revalidate API (e.g. for a Sanity webhook).
 
