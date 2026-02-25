@@ -43,28 +43,27 @@ export default async function ContactPage() {
   return (
     <div className={`mx-auto px-4 py-12 sm:px-6 ${hasImage ? "" : "max-w-2xl"}`}>
       {hasImage ? (
-        <div className="-mx-4 w-[100vw] max-w-none sm:mx-auto sm:w-full sm:max-w-[2400px]">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_2fr] md:gap-10 items-start">
-            <div className="min-w-0 px-4 sm:px-0">
+        <div className="-mx-4 w-[100vw] max-w-none sm:mx-auto sm:w-full sm:max-w-[2400px] lg:max-w-5xl">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_minmax(0,28rem)] md:gap-10 items-start">
+            <div className="min-w-0 px-4 sm:px-0 lg:max-w-2xl lg:mx-auto lg:flex lg:flex-col lg:items-center">
               {hasBody ? (
-                <div className="space-y-2">
+                <div className="w-full space-y-2">
                   <PortableText value={contact.body as object} components={contactPageComponents} />
                 </div>
               ) : (
                 <p className="text-[hsl(var(--muted-foreground))] text-xs">Add contact content in Sanity Studio.</p>
               )}
             </div>
-            <div className="min-w-0 space-y-2 px-4 sm:px-0">
-              <figure className="space-y-2">
-                <div className="relative aspect-[3/4] w-full overflow-hidden sm:aspect-[3/2]">
-                  <Image
-                    src={contact.image.src}
-                    alt={contact.image.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1536px) 66vw, 1600px"
-                    className="object-contain"
-                  />
-                </div>
+            <div className="min-w-0 px-4 sm:px-0 lg:flex lg:justify-center">
+              <figure>
+                <Image
+                  src={contact.image.src}
+                  alt={contact.image.alt}
+                  width={contact.image.width ?? 800}
+                  height={contact.image.height ?? 600}
+                  className="w-full h-auto"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 28rem"
+                />
               </figure>
             </div>
           </div>
