@@ -83,7 +83,7 @@ export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderPr
                             <Link
                               key={series.slug}
                               href={`/works/${series.slug}/${singleGallery.slug}`}
-                              className="flex min-h-[40px] w-full items-center px-4 py-2.5 text-left font-medium text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
+                              className="flex min-h-[40px] w-full items-center px-4 py-2.5 text-left text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
                               onClick={() => { setWorksOpen(false); setOpenSeriesSlug(null); }}
                             >
                               {singleGallery.title}
@@ -103,7 +103,7 @@ export default function Header({ seriesList, siteTitle, infoNavLinks }: HeaderPr
                               aria-expanded={openSeriesSlug === series.slug}
                               aria-haspopup="true"
                             >
-                              <span className="font-medium">{series.title}</span>
+                              <span>{series.title}</span>
                               <svg
                                 className={`h-4 w-4 shrink-0 text-[hsl(var(--muted-foreground))] transition-transform duration-200 ${openSeriesSlug === series.slug ? "rotate-90" : ""}`}
                                 fill="none"
