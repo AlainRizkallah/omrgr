@@ -39,9 +39,12 @@ export type GalleryGridCell =
       height?: number;
     };
 
+/** Text alignment for text-only blocks */
+export type TextBlockAlign = "left" | "right" | "center" | "justify";
+
 /** Layout block for gallery page (custom content above All Media grid) */
 export type GalleryLayoutBlock =
-  | { type: "galleryLayoutBlockText"; body: unknown; textSize?: string }
+  | { type: "galleryLayoutBlockText"; body: unknown; textSize?: string; textAlign?: TextBlockAlign }
   | {
       type: "galleryLayoutBlockImage";
       src: string;

@@ -24,7 +24,8 @@ export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gal
     _type == "galleryLayoutBlockText" => {
       "_type": _type,
       "body": body,
-      textSize
+      textSize,
+      textAlign
     },
     _type == "galleryLayoutBlockImage" => {
       "_type": _type,

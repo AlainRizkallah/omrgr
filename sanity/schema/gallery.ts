@@ -10,6 +10,14 @@ const LAYOUT_BLOCK_TEXT_SIZE_OPTIONS = [
 
 const TEXT_SIZE_LABELS: Record<string, string> = { sm: "Small", base: "Base", lg: "Large" };
 
+/** Text alignment for text blocks */
+const TEXT_ALIGN_OPTIONS = [
+  { value: "left", title: "Left" },
+  { value: "right", title: "Right" },
+  { value: "center", title: "Centered" },
+  { value: "justify", title: "Justify" },
+] as const;
+
 /** Text block for gallery custom layout (appears above All Media grid) */
 export const galleryLayoutBlockTextType = defineType({
   name: "galleryLayoutBlockText",
@@ -29,6 +37,18 @@ export const galleryLayoutBlockTextType = defineType({
       initialValue: "base",
     }),
     defineField({
+      name: "textAlign",
+      type: "string",
+      title: "Text alignment",
+      description: "Alignment of the text on the page.",
+      options: {
+        list: [...TEXT_ALIGN_OPTIONS],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "left",
+    }),
+    defineField({
       name: "body",
       type: "array",
       of: [{ type: "block" }],
@@ -37,12 +57,13 @@ export const galleryLayoutBlockTextType = defineType({
     }),
   ],
   preview: {
-    select: { textSize: "textSize" },
-    prepare({ textSize }) {
+    select: { textSize: "textSize", textAlign: "textAlign" },
+    prepare({ textSize, textAlign }) {
       const sizeLabel = TEXT_SIZE_LABELS[textSize] ?? "Base";
+      const alignLabel = TEXT_ALIGN_OPTIONS.find((o) => o.value === textAlign)?.title ?? "Left";
       return {
         title: "Text block",
-        subtitle: sizeLabel,
+        subtitle: `${sizeLabel}, ${alignLabel}`,
       };
     },
   },

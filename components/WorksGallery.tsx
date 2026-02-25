@@ -140,11 +140,19 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
             {blocks.map((block, i) => {
               if (block.type === "galleryLayoutBlockText" && block.body && Array.isArray(block.body) && block.body.length > 0) {
                 const sizeKey = layoutBlockTextSizeClass(block.textSize);
-                const components = galleryLayoutBlockComponents(sizeKey);
+                const alignClass =
+                  block.textAlign === "right"
+                    ? "text-right"
+                    : block.textAlign === "center"
+                      ? "text-center"
+                      : block.textAlign === "justify"
+                        ? "text-justify"
+                        : "text-left";
+                const components = galleryLayoutBlockComponents(sizeKey, { justify: block.textAlign === "justify" });
                 return (
                   <div key={i} className="mx-auto max-w-6xl px-10 sm:px-16 md:px-24">
                     <div
-                      className={`${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none`}
+                      className={`${SIZE_SCALE[sizeKey].block} leading-relaxed text-[hsl(var(--foreground))] max-w-none ${alignClass}`}
                     >
                       <PortableText value={(block.body ?? []) as React.ComponentProps<typeof PortableText>["value"]} components={components} />
                     </div>

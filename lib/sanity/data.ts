@@ -21,6 +21,7 @@ interface GalleryFetchResult {
     _key?: string
     body?: unknown
     textSize?: string
+    textAlign?: string
     layout?: string
     mobileOrder?: string
     columns?: string
@@ -79,10 +80,13 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
     .filter((b): b is NonNullable<typeof b> => b != null && b._type != null)
     .map((b) => {
       if (b._type === "galleryLayoutBlockText") {
+        const align = b.textAlign as "left" | "right" | "center" | "justify" | undefined;
+        const validAlign = align && ["left", "right", "center", "justify"].includes(align) ? align : "left";
         return {
           type: "galleryLayoutBlockText",
           body: b.body ?? [],
           textSize: b.textSize ?? "base",
+          textAlign: validAlign,
         };
       }
       if (b._type === "galleryLayoutBlockImage" && (b.imageRef || b.imageAsset?._id)) {
