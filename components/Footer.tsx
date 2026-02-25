@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="bg-[hsl(var(--background))] px-4 py-6 sm:px-6">
-      <div className="flex flex-wrap items-center justify-between gap-6 text-[hsl(var(--muted-foreground))]">
+      <div className="relative flex flex-wrap items-center justify-between gap-6 text-[hsl(var(--muted-foreground))]">
         {/* Left: brand + address */}
         <div className="flex flex-col gap-1">
           <span className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))]">
@@ -14,8 +14,8 @@ export default function Footer() {
           </span>
         </div>
 
-        {/* Center: Instagram */}
-        <div className="order-last sm:order-none w-full sm:w-auto flex justify-center">
+        {/* Center: Instagram — absolutely centered so it stays in the middle on all viewports */}
+        <div className="order-last sm:order-none w-full sm:w-auto flex justify-center sm:absolute sm:left-1/2 sm:-translate-x-1/2">
           <a
             href="https://www.instagram.com/omrgr_/"
             target="_blank"
