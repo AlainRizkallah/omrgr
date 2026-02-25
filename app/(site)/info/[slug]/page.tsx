@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getInfoPageBySlug, getInfoPageSlugs } from "@/lib/sanity/data";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
@@ -35,6 +36,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 function infoPageComponents(slug: string): PortableTextComponents {
   const justifyClass = slug === "about" ? "" : " text-justify";
+  const isPress = slug === "press";
+  const linkClass = isPress
+    ? "text-[hsl(var(--foreground))] underline underline-offset-2 inline-block transition-[transform] duration-200 ease-out hover:scale-105 origin-left"
+    : "text-[hsl(var(--foreground))] underline underline-offset-2 hover:no-underline";
+
+  const linkProps = (value?: { href?: string; url?: string; blank?: boolean }) => {
+    const href = value?.href ?? value?.url ?? "#";
+    return {
+      href,
+      className: linkClass,
+      target: value?.blank ? "_blank" as const : undefined,
+      rel: value?.blank ? "noopener noreferrer" : undefined,
+    };
+  };
+
+  const LinkMark = ({ value, children }: { value?: { href?: string; url?: string; blank?: boolean }; children?: React.ReactNode }) => (
+    <a {...linkProps(value)}>{children}</a>
+  );
+
   return {
     block: {
       normal: ({ children }) => (
@@ -42,6 +62,10 @@ function infoPageComponents(slug: string): PortableTextComponents {
           {children}
         </p>
       ),
+    },
+    marks: {
+      link: LinkMark,
+      externalLink: LinkMark,
     },
   };
 }
@@ -51,19 +75,58 @@ export default async function InfoPage({ params }: PageProps) {
   const page = await getInfoPageBySlug(slug);
   if (!page) notFound();
 
+  const hasBody = page.body && Array.isArray(page.body) && (page.body as unknown[]).length > 0;
+  const hasImage = page.image?.src;
+
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      {slug !== "about" && slug !== "press" && (
-        <h1 className="text-xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
-          {page.title}
-        </h1>
-      )}
-      {page.body && Array.isArray(page.body) && (page.body as unknown[]).length > 0 ? (
-        <div>
-          <PortableText value={page.body as object} components={infoPageComponents(slug)} />
+    <div className={`mx-auto px-4 py-12 sm:px-6 ${hasImage ? "" : "max-w-2xl"}`}>
+      {hasImage ? (
+        <div className="-mx-4 w-[100vw] max-w-none sm:mx-auto sm:w-full sm:max-w-[2400px]">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_2fr] md:gap-10 items-start">
+            <div className="min-w-0 px-4 sm:px-0">
+              {slug !== "about" && slug !== "press" && (
+                <h1 className="text-xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
+                  {page.title}
+                </h1>
+              )}
+              {hasBody ? (
+                <div>
+                  <PortableText value={page.body as object} components={infoPageComponents(slug)} />
+                </div>
+              ) : (
+                <p className="text-[hsl(var(--muted-foreground))] text-xs">No content yet.</p>
+              )}
+            </div>
+            <div className="min-w-0 space-y-2 px-4 sm:px-0">
+              <figure className="space-y-2">
+                <div className="relative aspect-[3/4] w-full overflow-hidden sm:aspect-[3/2]">
+                  <Image
+                    src={page.image.src}
+                    alt={page.image.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1536px) 66vw, 1600px"
+                    className="object-contain"
+                  />
+                </div>
+              </figure>
+            </div>
+          </div>
         </div>
       ) : (
-        <p className="text-[hsl(var(--muted-foreground))] text-xs">No content yet.</p>
+        <>
+          {slug !== "about" && slug !== "press" && (
+            <h1 className="text-xl font-normal tracking-wide text-[hsl(var(--foreground))] mb-6">
+              {page.title}
+            </h1>
+          )}
+          {hasBody ? (
+            <div>
+              <PortableText value={page.body as object} components={infoPageComponents(slug)} />
+            </div>
+          ) : (
+            <p className="text-[hsl(var(--muted-foreground))] text-xs">No content yet.</p>
+          )}
+        </>
       )}
     </div>
   );

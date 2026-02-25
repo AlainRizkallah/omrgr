@@ -85,10 +85,14 @@ export interface InfoPageData {
   slug: string;
   title: string;
   body: unknown;
+  /** Optional image shown on the right (text left). */
+  image?: { src: string; alt: string; width?: number; height?: number };
 }
 
 export interface ContactData {
   body: unknown;
+  /** Optional image shown on the right (text left). */
+  image?: { src: string; alt: string; width?: number; height?: number };
 }
 
 export type HeroImageMargin = "none" | "small" | "medium" | "large";

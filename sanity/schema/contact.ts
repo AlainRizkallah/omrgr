@@ -10,5 +10,12 @@ export const contactType = defineType({
       type: "array",
       of: [{ type: "block" }],
     }),
+    defineField({
+      name: "image",
+      type: "image",
+      title: "Image",
+      description: "Optional image shown on the right (text stays on the left).",
+      options: { hotspot: true },
+    }),
   ],
 });

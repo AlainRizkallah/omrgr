@@ -76,7 +76,9 @@ export const allSeriesForNavQuery = seriesListQuery;
 export const infoPageBySlugQuery = `*[_type == "infoPage" && slug == $slug][0] {
   slug,
   title,
-  body
+  body,
+  "imageRef": image.asset._ref,
+  "imageAsset": image.asset->{ _id, "metadata": metadata.dimensions }
 }`;
 
 /** GROQ: all info page slugs */
@@ -84,7 +86,9 @@ export const infoPageSlugsQuery = `*[_type == "infoPage"].slug`;
 
 /** GROQ: contact singleton */
 export const contactQuery = `*[_type == "contact"][0] {
-  body
+  body,
+  "imageRef": image.asset._ref,
+  "imageAsset": image.asset->{ _id, "metadata": metadata.dimensions }
 }`;
 
 /** GROQ: home document */

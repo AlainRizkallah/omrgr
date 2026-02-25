@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getContact } from "@/lib/sanity/data";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 
@@ -36,15 +37,48 @@ const contactPageComponents: PortableTextComponents = {
 
 export default async function ContactPage() {
   const contact = await getContact();
+  const hasBody = contact?.body && Array.isArray(contact.body) && (contact.body as unknown[]).length > 0;
+  const hasImage = contact?.image?.src;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      {contact?.body && Array.isArray(contact.body) && (contact.body as unknown[]).length > 0 ? (
-        <div className="space-y-2">
-          <PortableText value={contact.body as object} components={contactPageComponents} />
+    <div className={`mx-auto px-4 py-12 sm:px-6 ${hasImage ? "" : "max-w-2xl"}`}>
+      {hasImage ? (
+        <div className="-mx-4 w-[100vw] max-w-none sm:mx-auto sm:w-full sm:max-w-[2400px]">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_2fr] md:gap-10 items-start">
+            <div className="min-w-0 px-4 sm:px-0">
+              {hasBody ? (
+                <div className="space-y-2">
+                  <PortableText value={contact.body as object} components={contactPageComponents} />
+                </div>
+              ) : (
+                <p className="text-[hsl(var(--muted-foreground))] text-xs">Add contact content in Sanity Studio.</p>
+              )}
+            </div>
+            <div className="min-w-0 space-y-2 px-4 sm:px-0">
+              <figure className="space-y-2">
+                <div className="relative aspect-[3/4] w-full overflow-hidden sm:aspect-[3/2]">
+                  <Image
+                    src={contact.image.src}
+                    alt={contact.image.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1536px) 66vw, 1600px"
+                    className="object-contain"
+                  />
+                </div>
+              </figure>
+            </div>
+          </div>
         </div>
       ) : (
-        <p className="text-[hsl(var(--muted-foreground))] text-xs">Add contact content in Sanity Studio.</p>
+        <>
+          {hasBody ? (
+            <div className="space-y-2">
+              <PortableText value={contact!.body as object} components={contactPageComponents} />
+            </div>
+          ) : (
+            <p className="text-[hsl(var(--muted-foreground))] text-xs">Add contact content in Sanity Studio.</p>
+          )}
+        </>
       )}
     </div>
   );

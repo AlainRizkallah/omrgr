@@ -25,7 +25,31 @@ export const infoPageType = defineType({
     defineField({
       name: "body",
       type: "array",
-      of: [{ type: "block" }],
+      of: [
+        {
+          type: "block",
+          marks: {
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "URL",
+                fields: [
+                  { name: "href", type: "url", title: "URL" },
+                  { name: "blank", type: "boolean", title: "Open in new tab", initialValue: false },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "image",
+      type: "image",
+      title: "Image",
+      description: "Optional image shown on the right (text stays on the left).",
+      options: { hotspot: true },
     }),
   ],
 });

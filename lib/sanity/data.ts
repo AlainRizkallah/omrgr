@@ -211,11 +211,28 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
 
 export async function getInfoPageBySlug(slug: string): Promise<InfoPageData | null> {
   if (!isSanityConfigured()) return null;
-  const doc = await client.fetch<{ slug: string; title: string; body: unknown } | null>(
-    infoPageBySlugQuery,
-    { slug }
-  );
-  return doc;
+  const doc = await client.fetch<{
+    slug: string;
+    title: string;
+    body: unknown;
+    imageRef?: string;
+    imageAsset?: { _id?: string; metadata?: { width?: number; height?: number } };
+  } | null>(infoPageBySlugQuery, { slug });
+  if (!doc) return null;
+  let image: InfoPageData["image"];
+  if (doc.imageRef || doc.imageAsset?._id) {
+    const refId = doc.imageRef ?? doc.imageAsset?._id ?? "";
+    const dims = doc.imageAsset?.metadata;
+    const w = (dims?.width ?? DEFAULT_W);
+    const h = (dims?.height ?? DEFAULT_H);
+    image = {
+      src: refId ? urlFor({ _ref: refId }).width(w * 2).height(h * 2).url() : "",
+      alt: "",
+      width: w,
+      height: h,
+    };
+  }
+  return { slug: doc.slug, title: doc.title, body: doc.body, ...(image && { image }) };
 }
 
 export async function getInfoPageSlugs(): Promise<string[]> {
@@ -244,8 +261,26 @@ export async function getInfoNavLinks(): Promise<Array<{ href: string; label: st
 
 export async function getContact(): Promise<ContactData | null> {
   if (!isSanityConfigured()) return null;
-  const doc = await client.fetch<{ body: unknown } | null>(contactQuery);
-  return doc;
+  const doc = await client.fetch<{
+    body: unknown;
+    imageRef?: string;
+    imageAsset?: { _id?: string; metadata?: { width?: number; height?: number } };
+  } | null>(contactQuery);
+  if (!doc) return null;
+  let image: ContactData["image"];
+  if (doc.imageRef || doc.imageAsset?._id) {
+    const refId = doc.imageRef ?? doc.imageAsset?._id ?? "";
+    const dims = doc.imageAsset?.metadata;
+    const w = dims?.width ?? DEFAULT_W;
+    const h = dims?.height ?? DEFAULT_H;
+    image = {
+      src: refId ? urlFor({ _ref: refId }).width(w * 2).height(h * 2).url() : "",
+      alt: "",
+      width: w,
+      height: h,
+    };
+  }
+  return { body: doc.body, ...(image && { image }) };
 }
 
 export async function getHome(): Promise<HomeData> {
