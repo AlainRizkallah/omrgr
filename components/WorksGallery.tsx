@@ -139,7 +139,8 @@ export default function WorksGallery({ title, seriesTitle, hideSeriesInTitle, la
           <div className="mx-auto space-y-32">
             {blocks.map((block, i) => {
               if (block.type === "galleryLayoutBlockText" && block.body && Array.isArray(block.body) && block.body.length > 0) {
-                const sizeKey = layoutBlockTextSizeClass(block.textSize);
+                const sizeKeyFromBlock = layoutBlockTextSizeClass(block.textSize);
+                const sizeKey = smallerSizeForTextImageBlock(sizeKeyFromBlock);
                 const alignClass =
                   block.textAlign === "right"
                     ? "text-right"
