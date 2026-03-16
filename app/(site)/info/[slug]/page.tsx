@@ -62,6 +62,13 @@ function infoPageComponents(slug: string): PortableTextComponents {
           {children}
         </p>
       ),
+      blockquote: ({ children }) => (
+        <blockquote
+          className={`text-xs leading-relaxed${justifyClass} text-[hsl(var(--foreground))] mb-5 last:mb-0 border-l border-[hsl(var(--muted-foreground))] pl-4 italic`}
+        >
+          {children}
+        </blockquote>
+      ),
     },
     marks: {
       link: LinkMark,
