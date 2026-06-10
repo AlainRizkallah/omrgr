@@ -16,7 +16,7 @@ export const seriesListQuery = `*[_type == "series"] | order(order asc) {
 export const galleryBySlugsQuery = `*[_type == "series" && slug.current == $seriesSlug][0] {
   "seriesTitle": title,
   "seriesSlug": slug.current,
-  "gallery": galleries[]->[slug.current == $gallerySlug][0] {
+  "gallery": galleries[@->slug.current == $gallerySlug][0]-> {
     _id,
     title,
     "slug": slug.current,
