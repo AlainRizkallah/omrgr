@@ -11,58 +11,61 @@ export const seriesListQuery = `*[_type == "series"] | order(order asc) {
   }
 }`;
 
-/** GROQ: single gallery by series slug + gallery slug with layout blocks */
-export const galleryBySlugsQuery = `*[_type == "gallery" && slug.current == $gallerySlug && series->slug.current == $seriesSlug][0] {
-  _id,
-  title,
-  "slug": slug.current,
-  "seriesSlug": series->slug.current,
-  "seriesTitle": series->title,
-  "layoutBlocks": layoutBlocks[]{
-    _type,
-    _key,
-    _type == "galleryLayoutBlockText" => {
-      "_type": _type,
-      "body": body,
-      textSize,
-      textAlign
-    },
-    _type == "galleryLayoutBlockImage" => {
-      "_type": _type,
-      "imageRef": image.asset._ref,
-      "imageAsset": image.asset->,
-      caption,
-      textBelowTextSize,
-      "textBelowBody": textBelowBody
-    },
-    _type == "galleryLayoutBlockRow" => {
-      "_type": _type,
-      layout,
-      mobileOrder,
-      "body": body,
-      textSize,
-      "imageRef": image.asset._ref,
-      "imageAsset": image.asset->,
-      caption,
-      textBelowTextSize,
-      "textBelowBody": textBelowBody
-    },
-    _type == "galleryLayoutBlockGrid" => {
-      "_type": _type,
-      columns,
-      "items": items[]{
-        _type,
-        _key,
-        _type == "galleryGridCellText" => {
-          "body": body,
-          textSize
-        },
-        _type == "galleryGridCellImage" => {
-          "imageRef": image.asset._ref,
-          "imageAsset": image.asset->,
-          caption,
-          textBelowTextSize,
-          "textBelowBody": textBelowBody
+/** GROQ: single gallery by series slug + gallery slug with layout blocks.
+ *  Queries through the Series document so Series.galleries[] is the sole source of truth. */
+export const galleryBySlugsQuery = `*[_type == "series" && slug.current == $seriesSlug][0] {
+  "seriesTitle": title,
+  "seriesSlug": slug.current,
+  "gallery": galleries[]->[slug.current == $gallerySlug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    "layoutBlocks": layoutBlocks[]{
+      _type,
+      _key,
+      _type == "galleryLayoutBlockText" => {
+        "_type": _type,
+        "body": body,
+        textSize,
+        textAlign
+      },
+      _type == "galleryLayoutBlockImage" => {
+        "_type": _type,
+        "imageRef": image.asset._ref,
+        "imageAsset": image.asset->,
+        caption,
+        textBelowTextSize,
+        "textBelowBody": textBelowBody
+      },
+      _type == "galleryLayoutBlockRow" => {
+        "_type": _type,
+        layout,
+        mobileOrder,
+        "body": body,
+        textSize,
+        "imageRef": image.asset._ref,
+        "imageAsset": image.asset->,
+        caption,
+        textBelowTextSize,
+        "textBelowBody": textBelowBody
+      },
+      _type == "galleryLayoutBlockGrid" => {
+        "_type": _type,
+        columns,
+        "items": items[]{
+          _type,
+          _key,
+          _type == "galleryGridCellText" => {
+            "body": body,
+            textSize
+          },
+          _type == "galleryGridCellImage" => {
+            "imageRef": image.asset._ref,
+            "imageAsset": image.asset->,
+            caption,
+            textBelowTextSize,
+            "textBelowBody": textBelowBody
+          }
         }
       }
     }

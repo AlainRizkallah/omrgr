@@ -23,7 +23,9 @@ export const seriesType = defineType({
     }),
     defineField({
       name: "galleries",
+      title: "Galleries",
       type: "array",
+      description: "Add galleries to this series here. Drag to reorder. Each gallery will appear in the site menu in this order.",
       of: [{ type: "reference", to: [{ type: "gallery" }] }],
     }),
   ],

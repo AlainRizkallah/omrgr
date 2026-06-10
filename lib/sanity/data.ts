@@ -11,37 +11,42 @@ import {
 } from "./queries";
 import type { SeriesLink, GalleryData, InfoPageData, ContactData, HomeData, PhotoItem, GalleryLayoutBlock, GalleryGridCell } from "./types";
 
-interface GalleryFetchResult {
-  title: string
-  slug: string
-  seriesSlug: string
-  seriesTitle: string
-  layoutBlocks?: Array<{
+type LayoutBlockRaw = {
+  _type: string
+  _key?: string
+  body?: unknown
+  textSize?: string
+  textAlign?: string
+  layout?: string
+  mobileOrder?: string
+  columns?: string
+  items?: Array<{
     _type: string
     _key?: string
     body?: unknown
     textSize?: string
-    textAlign?: string
-    layout?: string
-    mobileOrder?: string
-    columns?: string
-    items?: Array<{
-      _type: string
-      _key?: string
-      body?: unknown
-      textSize?: string
-      imageRef?: string
-      imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
-      caption?: string
-      textBelowTextSize?: string
-      textBelowBody?: unknown
-    }>
     imageRef?: string
     imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
     caption?: string
     textBelowTextSize?: string
     textBelowBody?: unknown
   }>
+  imageRef?: string
+  imageAsset?: { _id?: string; metadata?: { dimensions?: { width: number; height: number } } }
+  caption?: string
+  textBelowTextSize?: string
+  textBelowBody?: unknown
+}
+
+interface GalleryFetchResult {
+  seriesTitle: string
+  seriesSlug: string
+  gallery: {
+    _id: string
+    title: string
+    slug: string
+    layoutBlocks?: LayoutBlockRaw[]
+  } | null
 }
 
 const DEFAULT_W = 1200;
@@ -72,8 +77,9 @@ export async function getSeriesList(): Promise<SeriesLink[]> {
 
 export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string): Promise<GalleryData | null> {
   if (!isSanityConfigured()) return null;
-  const g = await client.fetch<GalleryFetchResult | null>(galleryBySlugsQuery, { seriesSlug, gallerySlug });
-  if (!g) return null;
+  const result = await client.fetch<GalleryFetchResult | null>(galleryBySlugsQuery, { seriesSlug, gallerySlug });
+  if (!result || !result.gallery) return null;
+  const g = result.gallery;
   const photos: PhotoItem[] = [];
 
   const layoutBlocks: GalleryLayoutBlock[] = (g.layoutBlocks || [])
@@ -190,17 +196,17 @@ export async function getGalleryBySlugs(seriesSlug: string, gallerySlug: string)
   const otherGalleries: GalleryData["otherGalleries"] = [];
   for (const series of seriesList) {
     for (const gal of series.galleries) {
-      if (gal.seriesSlug !== g.seriesSlug || gal.slug !== g.slug) {
+      if (gal.seriesSlug !== result.seriesSlug || gal.slug !== g.slug) {
         otherGalleries.push({ slug: gal.slug, title: gal.title, seriesSlug: gal.seriesSlug });
       }
     }
   }
-  const currentSeries = seriesList.find((s) => s.slug === g.seriesSlug);
+  const currentSeries = seriesList.find((s) => s.slug === result.seriesSlug);
   const isSingleGalleryInSeries = (currentSeries?.galleries?.length ?? 0) === 1;
   return {
     title: g.title,
-    seriesSlug: g.seriesSlug,
-    seriesTitle: g.seriesTitle,
+    seriesSlug: result.seriesSlug,
+    seriesTitle: result.seriesTitle,
     isSingleGalleryInSeries,
     slug: g.slug,
     layoutBlocks: layoutBlocks.length > 0 ? layoutBlocks : [],

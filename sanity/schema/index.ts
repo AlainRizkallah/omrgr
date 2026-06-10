@@ -1,7 +1,6 @@
 import { seriesType } from "./series";
 import {
   galleryType,
-  galleryImageType,
   galleryLayoutBlockTextType,
   galleryLayoutBlockImageType,
   galleryLayoutBlockRowType,
@@ -17,7 +16,6 @@ import { homeType } from "./home";
 export const schemaTypes = [
   seriesType,
   galleryType,
-  galleryImageType,
   galleryLayoutBlockTextType,
   galleryLayoutBlockImageType,
   galleryLayoutBlockRowType,
